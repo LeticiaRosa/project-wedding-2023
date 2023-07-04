@@ -7,6 +7,7 @@ export const ContainerList = styled.main`
 
   .item {
     text-align: center;
+    background-color: ${(props) => props.theme['terra-100']};
   }
 
   img {
@@ -16,7 +17,7 @@ export const ContainerList = styled.main`
     border-radius: 8px;
   }
 
-  h3 {
+  h4 {
     margin-top: 10px;
     font-size: 16px;
   }
@@ -29,10 +30,11 @@ export const ContainerList = styled.main`
   .presentear-btn {
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #f0f0f0;
+    background-color: ${(props) => props.theme['terra-700']};
     border: none;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
+    color: white;
   }
 `

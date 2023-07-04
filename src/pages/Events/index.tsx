@@ -5,11 +5,11 @@ export function Events() {
     <Container>
       <h1>Cerimônia e Recepção</h1>
 
-      <p>
+      <span>
         A cerimônia e a recepção serão realizados no{' '}
         <strong>SÍTIO BOA VISTA IGARAPÉ</strong>, no dia:{' '}
         <strong>25/11/2023 às 17:30</strong>
-      </p>
+      </span>
       <p>
         <strong>Endereço:</strong> Rua Salvador Nunes, 84, Bairro Cidade Nova,
         Igarape/MG
@@ -21,7 +21,7 @@ export function Events() {
         referrerPolicy="no-referrer-when-downgrade"
       ></iframe>
       <p>
-        <strong>No Waze:</strong> “Sítio Boa Vista Igarapé “
+        <strong>No Waze:</strong> &quot;Sítio Boa Vista Igarapé&quot;
       </p>
     </Container>
   )

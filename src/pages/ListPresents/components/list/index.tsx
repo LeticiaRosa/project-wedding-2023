@@ -1,5 +1,6 @@
 import { ContainerList } from './styles'
 import { productsLists } from '../../../../constants/productsList'
+
 export function List() {
   return (
     <ContainerList>
@@ -8,7 +9,7 @@ export function List() {
           <div className="item" key={item.id}>
             <img src={item.image} alt={item.name} />
             <h4>{item.name}</h4>
-            <p>{item.price}</p>
+            <p>R${item.price / 100}</p>
             <button className="presentear-btn">Presentear</button>
           </div>
         )

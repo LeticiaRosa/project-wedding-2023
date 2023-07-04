@@ -5,7 +5,7 @@ export function ListPresents() {
   return (
     <Container>
       <h1>Lista de Presentes On-Line!</h1>
-      <p>
+      <span>
         Queridos convidados,
         <strong>
           {' '}
@@ -16,7 +16,7 @@ export function ListPresents() {
         <p>
           Desde já agradeçemos pelos presentes e principalmente pelo carinho!
         </p>
-      </p>
+      </span>
       <List />
     </Container>
   )

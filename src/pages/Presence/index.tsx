@@ -6,14 +6,14 @@ export function Presence() {
     <Container>
       <h1>Confirmar a presença </h1>
 
-      <p>
+      <span>
         Queridos convidados,
         <strong>
           {' '}
           o convite enviado por nós é específico para você e acompanhantes
           descritos no convite!
         </strong>{' '}
-        Infelizmente Não conseguimos convidar todas as pessoas queridas que
+        Infelizmente não conseguimos convidar todas as pessoas queridas que
         gostaríamos, por isso pedimos que não o estenda para outras pessoas.
         Você é muito especial para nós, e contamos com a sua presença, mas caso
         não seja possível comparecer, pedimos que nos informe.
@@ -23,7 +23,7 @@ export function Presence() {
         <strong>
           Por favor, preencha o formulário abaixo com os dados solicitados.
         </strong>
-      </p>
+      </span>
       <Form />
     </Container>
   )
