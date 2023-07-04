@@ -1,4 +1,4 @@
-import { List } from './components/list'
+import { List } from './components/List'
 import { Container } from './styles'
 
 export function ListPresents() {
