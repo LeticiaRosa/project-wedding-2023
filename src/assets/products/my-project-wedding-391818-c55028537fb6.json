@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "my-project-wedding-391818",
+  "private_key_id": "c55028537fb64abc5238a3ae7aa9f62f3c0fd4b6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCHupP1oCv0lCnT\nFtuFqroOjDpThwOe7bdhCb12ZC5QRPrWuA3IvwqEv7DP+TgPBYlqOAfHa5UhVvNM\nbGsB3O7ZqIOI4OD0gvbql/LyduFK8Tq9e89hdyDPNV+ahAumgeiD7ldYpmm2AZ/L\nVp0EOTjOi9KNcOL2SzGuxESFo7CwiQwxqgGBfTZGEHFOtrf6ZIfQy+V1WvieiZa1\nYI9Ge5C53stvvSmoLeeJ1ZoFxypRDLlaZhnV9G1b/rCjlO83+Q7KErN/C2nUHYW4\nXpjGId8rknhQ8zDGgW+iofeHIlneADJtBrEYK8vyuyptlqAI5tTmIChJbXhW3ES5\nx2uSHM+hAgMBAAECggEAAR2A2rtSsSNIhrIA4sPI3Ja9YfNRjcxBPfxhAKiJEuLG\nNt5zSot7UCTtFIBlPAZdHzDPq41QP+JhhGa9qFnC4qn2TrkeUBQFaF8QQXrFliKO\nS4FJbnEWpW04WGIuYFNf8DmUoSdY5gR0ZizThHXd6CCQ/dWIH+L1SQzWzUxPhtvO\nXBCzDbIK9NS5KB/lokAcxijGmXxjg/6ydYsKv1hp7M7ONdeBw8hqNkRHxchTv+0T\nOlSrrwZateq2bLtEyYkwsE0QaydjWq6Rn0JYcxz82lkc95tJJ4QO+OpI6ZLCFA4Z\nv0yd1sfpEHQjPxLG3HHcFW2ukL9B2AnzyDDL8j4cgQKBgQC86aqOI+V8hH11fXdW\nsIgBp6cuGpbKMUhuigYQSBhujg7UuyEv7xHsmP+LiEGRbFdLyhBvWWFU0NuydzdA\nwXEYpZoCjpo730zuGka0xzaU4NW+N82/l0SbQtnk1rjjVG3Dx5SeI7UJuwKqXolU\nrQhYvv4iF2Z9qkLB8XF13gXUcQKBgQC37eHrc+P0SioqPZysF9P0j5E4iZkoTU1N\nIsu9Uu5Lqa6tbLivqVX7F5WfN9RCfSfsxtDJS1ppeChMKiJ8ZtqSyga60aIkLWxg\njbUlnq50rhxeevUQxhMAH3skG8UkYgd5Jw4s6aYiT96spUP+8+PwP/cA//Ubz6NX\ndCdOWIyGMQKBgQCH+B7cA5YvEyVBpTZ53MFnf4XitxyFFwetGAbZPSrol7KxBqcS\nWx4pjs2PXljjFHmYgS1nF4voghM+1nOcVh7SwI6i/ISiR0yVq6/sed4dNd5h9MRP\n+85TecBe5vVYGfKPEV00nTq2cDWw7i4mFgyF46ICY5lPJXa7JM6nKVBE4QKBgARK\nh3/Px1y2sj8kCti1AZvuEYxJIYqgKxKGokw7eBXJ0qp3I+PtRnVCOpppWglnFBxh\nExPvLx/QztfgD8fpOmY8UmXfaDIB4UprY/OJvTY5ra3Cnp8Sj/TrxxqzjyjnJJd+\nAsWnednJFT/f5zM2i3XaeC/MyPIqKPxsWFJqnHSxAoGAbOgQ8Mrmn7wWY9h3APpg\n6/vvzPJGtTxSKJJnhZuBwP+MvV6Y9+s7AZv0uMGDno6FfL862YFZi+4S9z6OfDRg\nP+HcMHhCZji3XrWtB8b+GCvwY/DMPABuz3jlqmVAA64Rg01AObjM9M3l3CSWNWiO\n7YbtMKZGgVYCoL94IAGMCM0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "sheets-wedding@my-project-wedding-391818.iam.gserviceaccount.com",
+  "client_id": "114033110720646898348",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sheets-wedding%40my-project-wedding-391818.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
