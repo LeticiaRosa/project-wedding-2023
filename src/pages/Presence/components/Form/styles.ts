@@ -3,19 +3,22 @@ import { styled } from 'styled-components'
 export const ContainerForm = styled.form`
   width: 80%;
   background-color: ${(props) => props.theme['terra-100']};
+  padding: 2rem;
 `
 
-export const ContainerInputs = styled.div`
-  div > input[type='text'] {
-    border: 1px solid;
-    border-radius: 6px;
+export const TitleForm = styled.h4`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 1rem;
+`
+
+export const ContainerSeparatorInputs = styled.div`
+  padding: 1rem;
+
+  label {
     width: 100%;
-    height: 2rem;
-    margin: 1rem 0;
-    padding: 1rem;
-  }
-  div > label {
-    width: 100%;
+    display: block;
   }
   legend {
     width: 100%;
@@ -23,7 +26,24 @@ export const ContainerInputs = styled.div`
   }
   h6 {
     width: 100%;
-    padding-top: 1rem;
+    padding-top: 0.5rem;
+  }
+  input[type='text'] {
+    border: 1px solid gray;
+    border-radius: 6px;
+    width: 100%;
+    height: 2rem;
+    margin: 1rem 0;
+    padding: 1.5rem;
+  }
+  textarea {
+    border: 1px solid gray;
+    border-radius: 6px;
+    width: 100%;
+    height: 10rem;
+    margin: 1rem 0;
+    padding: 1.5rem;
+    resize: none;
   }
   .radio {
     position: relative;
@@ -59,16 +79,6 @@ export const ContainerInputs = styled.div`
     height: 10px;
     background-color: ${(props) => props.theme.black};
     border-radius: 50%;
-  }
-
-  textarea {
-    border: 1px solid;
-    border-radius: 6px;
-    width: 100%;
-    height: 10rem;
-    margin: 1rem 0;
-    padding: 1rem;
-    resize: none;
   }
 `
 

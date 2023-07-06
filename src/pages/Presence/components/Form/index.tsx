@@ -1,80 +1,105 @@
-import { SyntheticEvent } from 'react'
 import { format } from 'date-fns'
-import { ContainerForm, ContainerButton, ContainerInputs } from './styles'
-import axios from 'axios'
+import {
+  ContainerForm,
+  ContainerButton,
+  TitleForm,
+  ContainerSeparatorInputs,
+} from './styles'
+import { useForm } from 'react-hook-form'
+import { Api } from '../../../../api/api'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+interface DataForm {
+  amountPeople: string
+  isPresent: string
+  mensage: string
+  name: string
+}
 
 export function Form() {
+  const { register, handleSubmit, reset } = useForm<DataForm>({
+    defaultValues: {
+      amountPeople: '',
+      isPresent: '',
+      mensage: '',
+      name: '',
+    },
+  })
   const repeticoes = Array.from({ length: 8 }, (_, index) => index + 1)
 
-  async function handleOnSubmit(e: SyntheticEvent) {
-    e.preventDefault()
-    const target = e.target as typeof e.target & {
-      name: { value: string }
-      isPresent: { value: string }
-      mensage: { value: string }
-      amountPeople: { value: string }
-    }
-    const name = target.name.value // typechecks!
-    const isPresent = target.isPresent.value // typechecks!
-    const mensage = target.mensage.value // typechecks!
-    const amountPeople = target.amountPeople.value // typechecks!
-
+  async function handleSalveOnSheets(data: DataForm) {
     const dataAtual = new Date()
     const dataAtualFormatada = format(dataAtual, 'dd/MM/yyyy HH:mm:ss')
-    const data = {
-      NOME: name,
-      'VAI AO CASAMENTO?': isPresent,
-      TEXTO: mensage,
-      'QUANTIDADE DE PESSOAS': amountPeople,
+    const dataFormatted = {
+      NOME: data.name,
+      'VAI AO CASAMENTO?': data.isPresent,
+      TEXTO: data.mensage,
+      'QUANTIDADE DE PESSOAS': data.amountPeople,
       'DATA DA CONFIRMAÇÃO': dataAtualFormatada,
     }
 
-    await axios
-      .post(
-        'https://sheet.best/api/sheets/8507c123-02eb-43f0-a757-4233f294e081',
-        data,
+    await Api.post('', dataFormatted)
+      .then(() =>
+        toast.success('Presença Confirmada!', {
+          position: toast.POSITION.TOP_CENTER,
+          theme: 'colored',
+        }),
       )
-      .then((response) => console.log(response))
-      .catch((errror) => console.log(errror))
+      .catch((error) =>
+        toast.error(`Erro ao enviar o post: ${error.message}`, {
+          position: toast.POSITION.TOP_CENTER,
+          theme: 'colored',
+        }),
+      )
+    reset()
   }
 
   return (
-    <ContainerForm action="submit" onSubmit={handleOnSubmit}>
-      <ContainerInputs>
-        <h4>
-          <p>Formulário de Confirmação de Presença</p>
-        </h4>
+    <>
+      <ToastContainer />
 
-        <div className="name">
+      <ContainerForm
+        action="submit"
+        onSubmit={handleSubmit(handleSalveOnSheets)}
+      >
+        <TitleForm>Formulário de Confirmação de Presença</TitleForm>
+
+        <ContainerSeparatorInputs>
           <label htmlFor="name">
             Informe o seu nome ou da sua familia conforme escrito no convite:
           </label>
           <input
             type="text"
-            name="name"
             id="name"
             placeholder="Informe seu nome"
             required
+            {...register('name')}
           />
-        </div>
+        </ContainerSeparatorInputs>
 
-        <div>
+        <ContainerSeparatorInputs>
           <legend>Podemos contar com a sua presença ? </legend>
 
           <label className="radio">
-            <input type="radio" name="isPresent" value="Yes" required />
+            <input
+              type="radio"
+              value="Yes"
+              required
+              {...register('isPresent')}
+            />
             <span className="checkmark"></span>
             Sim, estarei presente no casamento
           </label>
 
           <label className="radio">
-            <input type="radio" name="isPresent" value="No" />
+            <input type="radio" value="No" {...register('isPresent')} />
             <span className="checkmark"></span>
             Não, infelizmente não poderei comparecer
           </label>
-        </div>
+        </ContainerSeparatorInputs>
 
-        <div>
+        <ContainerSeparatorInputs>
           <label htmlFor="mensage">
             Caso sua resposta a pergunta acima seja NÃO, utilize o campo abaixo
             para enviar uma mensagem aos noivos:
@@ -82,19 +107,23 @@ export function Form() {
           <h6>Assine com seu nome completo no final do texto</h6>
           <textarea
             id="mensage"
-            name="mensage"
             placeholder="Digite aqui a sua mensagem"
+            {...register('mensage')}
           ></textarea>
-        </div>
+        </ContainerSeparatorInputs>
 
-        <div>
+        <ContainerSeparatorInputs>
           <legend>Selecione a quantidade de confirmados:</legend>
 
           {repeticoes.map((item) => {
             if (item > 1) {
               return (
                 <label className="radio" key={item}>
-                  <input type="radio" name="amountPeople" value={item} />
+                  <input
+                    type="radio"
+                    value={item}
+                    {...register('amountPeople')}
+                  />
                   <span className="checkmark"></span>
                   {item} pessoas (incluindo eu)
                 </label>
@@ -102,7 +131,11 @@ export function Form() {
             } else if (item === 1) {
               return (
                 <label className="radio" key={item}>
-                  <input type="radio" name="amountPeople" value={item} />
+                  <input
+                    type="radio"
+                    value={item}
+                    {...register('amountPeople')}
+                  />
                   <span className="checkmark"></span>
                   {item} pessoa (somente eu)
                 </label>
@@ -110,12 +143,12 @@ export function Form() {
             }
             return <></>
           })}
-        </div>
-      </ContainerInputs>
-      <ContainerButton>
-        <button type="submit">Confirmar presença</button>
-      </ContainerButton>
-      <p></p>
-    </ContainerForm>
+        </ContainerSeparatorInputs>
+
+        <ContainerButton>
+          <button type="submit">Confirmar presença</button>
+        </ContainerButton>
+      </ContainerForm>
+    </>
   )
 }

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components'
 
-export const ContainerSort = styled.main`
+export const ContainerSort = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
@@ -20,7 +20,7 @@ export const ContainerSort = styled.main`
     cursor: pointer;
   }
 `
-export const ContainerList = styled.main`
+export const ContainerList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-gap: 10px;
@@ -56,12 +56,13 @@ export const ContainerList = styled.main`
 
   .presentear-btn {
     padding: 8px 16px;
-    background-color: ${(props) => props.theme['terra-700']};
+    background-color: ${(props) => props.theme['terra-600']};
     border: none;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
     color: white;
+    font-weight: 500;
   }
   @media (max-width: 800px) {
     grid-template-columns: repeat(3, 1fr);
@@ -75,7 +76,7 @@ export const ContainerList = styled.main`
     grid-template-columns: repeat(1, 1fr);
   }
 `
-export const ContainerPagination = styled.main`
+export const ContainerPagination = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

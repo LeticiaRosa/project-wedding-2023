@@ -1,5 +1,5 @@
-import { List } from './components/List'
 import { Container } from './styles'
+import { List } from './components/List'
 
 export function ListPresents() {
   return (
@@ -17,6 +17,7 @@ export function ListPresents() {
           Desde já agradeçemos pelos presentes e principalmente pelo carinho!
         </p>
       </span>
+
       <List />
     </Container>
   )

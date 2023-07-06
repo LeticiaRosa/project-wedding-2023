@@ -2,14 +2,16 @@ import { ContainerSort, ContainerList, ContainerPagination } from './styles'
 import { productsLists } from '../../../../constants/productsList'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { Loader } from '../Loader'
-import { Cart } from '../Cart'
+import { useCart } from '../../../../contexts/contexts'
 
 export function List() {
+  const { listPresents, setListPresents } = useCart()
   const [currentPage, setCurrentPage] = useState(1)
   const [sortOption, setSortOption] = useState<
     'nameAsc' | 'nameDesc' | 'priceAsc' | 'priceDesc'
   >('nameAsc')
   const [isLoading, setIsLoading] = useState(false)
+
   const getInitialProductsPerPage = () => {
     const screenWidth = window.innerWidth
     if (screenWidth <= 800 && screenWidth > 500) {
@@ -22,19 +24,10 @@ export function List() {
       return 8
     }
   }
+
   const [productsPerPage, setProductsPerPage] = useState(
     getInitialProductsPerPage(),
   )
-
-  useEffect(() => {
-    // Simulando um atraso de 1 segundo para mostrar o carregamento
-    setIsLoading(true)
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [currentPage, sortOption])
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,6 +40,16 @@ export function List() {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+
+  useEffect(() => {
+    // Simulando um atraso de 1 segundo para mostrar o carregamento
+    setIsLoading(true)
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [currentPage, sortOption])
 
   const totalPages = Math.ceil(productsLists.length / productsPerPage)
 
@@ -79,7 +82,6 @@ export function List() {
   return (
     <>
       <ContainerSort>
-        <Cart />
         <label htmlFor="sortOption">Ordenar por:</label>
         <select
           id="sortOption"
@@ -108,7 +110,22 @@ export function List() {
                     currency: 'BRL',
                   })}
                 </p>
-                <button className="presentear-btn">Presentear</button>
+                <button
+                  className="presentear-btn"
+                  onClick={() =>
+                    setListPresents([
+                      ...listPresents,
+                      {
+                        id: item.id,
+                        image: item.image,
+                        name: item.name,
+                        price: item.price,
+                      },
+                    ])
+                  }
+                >
+                  <strong>Presentear</strong>
+                </button>
               </div>
             )
           })}

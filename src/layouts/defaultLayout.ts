@@ -8,7 +8,14 @@ export const ContainerMain = styled.main`
   width: 100%;
 `
 export const Container = styled.div`
-  div {
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1rem;
+  main {
     max-width: 1000px;
     width: 100%;
     display: flex;

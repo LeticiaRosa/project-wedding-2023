@@ -1,8 +1,5 @@
 import styled from 'styled-components'
-export const Container = styled.div`
-  display: flex;
-  align-items: end;
-  width: 100%;
+export const Container = styled.main`
   h1 {
     font-size: 3rem;
   }
@@ -13,8 +10,6 @@ export const Container = styled.div`
   }
 
   div {
-    display: flex;
-    align-items: start;
     padding-top: 1rem;
     p {
       display: flex;
