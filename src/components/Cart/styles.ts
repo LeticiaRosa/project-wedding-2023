@@ -1,7 +1,7 @@
-import { styled } from 'styled-components'
+import { styled, keyframes, css } from 'styled-components'
 
 type menuProps = {
-  expandedMenu: boolean
+  expandedM: boolean
 }
 
 export const ContainerCart = styled.div<menuProps>`
@@ -11,22 +11,18 @@ export const ContainerCart = styled.div<menuProps>`
   justify-content: space-between;
   align-items: start;
   flex-direction: column;
-  background: rgba(255, 255, 255, 1);
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 80%;
   z-index: 100;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   max-width: 400px;
   max-height: 600px;
-  ${({ expandedMenu }) =>
-    expandedMenu &&
-    `
-    height: 60px;
-    background: rgba(255,166,77,1);
+  height: ${({ expandedM }) => (expandedM ? '80%' : '80%')};
 
-  `}
+  background: ${({ expandedM }) =>
+    expandedM ? 'rgba(255,166,77,1)' : 'rgba(255, 255, 255, 1)'};
+
   .dropdown-toggle {
     display: flex;
     justify-content: center;
@@ -37,8 +33,35 @@ export const ContainerCart = styled.div<menuProps>`
   }
 `
 
-export const ContainerTitle = styled.div`
-  display: flex;
+const firstOpenKeyframe = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg)
+  }
+`
+
+const firstCloseKeyFrame = keyframes`
+  0% {
+    transform:rotate(180deg);
+  }
+  100% {
+    transform:rotate(0);
+
+  }
+`
+
+const firstOpenAnimation = css`
+  animation: 1s linear ${firstOpenKeyframe} forwards;
+`
+
+const firstCloseAnimation = css`
+  animation: 1s linear ${firstCloseKeyFrame} forwards;
+`
+
+export const ContainerTitle = styled.button<menuProps>`
+  /* display: flex;
   align-items: center;
   justify-content: start;
   font-weight: 800;
@@ -47,13 +70,20 @@ export const ContainerTitle = styled.div`
   padding-bottom: 1rem;
   p {
     padding: 0 1rem;
-    z-index: 1000;
-  }
+    z-index: 1;
+  } */
+
+  ${({ expandedM }) =>
+    expandedM !== null &&
+    (expandedM ? firstOpenAnimation : firstCloseAnimation)}
 `
 
 export const ContainerElements = styled.div`
+  display: flex;
+  align-items: start;
+  justify-content: center;
   flex-direction: column;
-  padding: 1.2rem;
+  padding: 1rem;
 
   .item {
     display: flex;
@@ -80,12 +110,35 @@ export const ContainerElements = styled.div`
 
 export const ContainerListPresents = styled.div`
   overflow: auto;
-  max-height: 400px;
+  max-height: 350px;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
 
   .item {
     display: flex;
     align-items: center;
     text-align: center;
+  }
+  .item-remove {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    color: ${(props) => props.theme.red};
+    cursor: pointer;
+  }
+  @media (max-width: 800px) {
+    max-height: 300px;
+  }
+
+  @media (max-width: 500px) {
+    max-height: 300px;
+  }
+
+  @media (max-width: 300px) {
+    max-height: 100px;
   }
 `
 
@@ -93,10 +146,24 @@ export const FooterCart = styled.div`
   padding: 1.2rem;
 `
 
+export const ContainerRemoveAllItens = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  button {
+    border: none;
+    background-color: transparent;
+    color: ${(props) => props.theme.red};
+    cursor: pointer;
+  }
+`
+
 export const ContainerTotal = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 0;
   strong {
     font-weight: 700;
     font-size: 1.5rem;

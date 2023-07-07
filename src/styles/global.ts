@@ -20,6 +20,10 @@ export const GlobalStyle = createGlobalStyle`
         font-family: 'Sintony', sans-serif;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
     border-style, input-security, textarea, button, input {
         font-family: 'Sintony', sans-serif;
         font-weight: 400;
@@ -29,7 +33,24 @@ export const GlobalStyle = createGlobalStyle`
         font-family: 'Dancing Script', cursive;
         font-weight: 500; 
         font-size: 2rem; 
-        padding: 1rem;
+        
     }
+
+    ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color:${(props) => props.theme.gray};
+    border-radius: 5px;
+  }
+
+  /* Estilos para navegadores Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: ${(props) => props.theme.gray} transparent;
     
 `

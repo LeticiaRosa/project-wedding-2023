@@ -1,7 +1,8 @@
 export const defaultTheme = {
   white: '#FFF',
   black: '#000',
-  gray: '#a9a9a9',
+  gray: '#c8c8c8',
+  red: '#7C0A02',
   'terra-100': '#fffaf5',
   'terra-300': '#ffd9b3',
   'terra-400': '#ffcc99',

@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, ScrollRestoration } from 'react-router-dom'
 import { Header } from '../components/Header'
 import { ContainerMain, Container } from './defaultLayout'
 import { Footer } from '../components/Footer'
@@ -7,17 +7,20 @@ import { CartContextProvider } from '../contexts/contexts'
 
 export function DefaultLayout() {
   return (
-    <ContainerMain>
-      <CartContextProvider>
-        <>
-          <Header />
-          <Container>
-            <Outlet />
-          </Container>
-          <Cart />
-          <Footer />
-        </>
-      </CartContextProvider>
-    </ContainerMain>
+    <>
+      <ContainerMain>
+        <CartContextProvider>
+          <>
+            <Header />
+            <Container>
+              <Outlet />
+            </Container>
+            <Cart />
+            <Footer />
+          </>
+          <ScrollRestoration />
+        </CartContextProvider>
+      </ContainerMain>
+    </>
   )
 }

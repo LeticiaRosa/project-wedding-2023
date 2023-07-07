@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useContext, useState } from 'react'
+import { ReactNode, createContext, useContext, useReducer } from 'react'
+import { cartReducer } from '../reducers/presents/reducer'
+import {
+  addNewItemAction,
+  removeItemAction,
+  removeAllItensAction,
+} from '../reducers/presents/actions'
 
 export interface CartContextType {
   id: number
@@ -8,8 +14,11 @@ export interface CartContextType {
 }
 
 export interface ListContextType {
-  listPresents: CartContextType[]
-  setListPresents: (values: CartContextType[]) => void
+  state: CartContextType[]
+  newItemCart: (values: CartContextType) => void
+  removeItemCart: (values: number) => void
+  removeAllItemsCart: () => void
+  totalPrice: number
 }
 
 type ChildrenType = {
@@ -19,9 +28,32 @@ type ChildrenType = {
 const CartContext = createContext<ListContextType>({} as ListContextType)
 
 function CartContextProvider({ children }: ChildrenType) {
-  const [listPresents, setListPresents] = useState<CartContextType[]>([])
+  const [state, dispatch] = useReducer(cartReducer, [])
+
+  function newItemCart(values: CartContextType) {
+    dispatch(addNewItemAction(values))
+  }
+
+  function removeItemCart(value: number) {
+    dispatch(removeItemAction(value))
+  }
+
+  function removeAllItemsCart() {
+    dispatch(removeAllItensAction())
+  }
+
+  const totalPrice = state.reduce((total, item) => total + item.price, 0)
+
   return (
-    <CartContext.Provider value={{ listPresents, setListPresents }}>
+    <CartContext.Provider
+      value={{
+        newItemCart,
+        state,
+        removeItemCart,
+        removeAllItemsCart,
+        totalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   )

@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header`
 
   img.imageBackgroung {
     width: 100%;
-    height: 550px;
+    height: 400px;
     object-fit: cover;
     object-position: 10% 40%;
   }
@@ -36,7 +36,7 @@ export const MenuContainer = styled.div`
   }
   h1 {
     font-size: 1.5rem;
-    padding-bottom: 0.5rem;
+    padding: 0.5rem;
   }
 
   nav {

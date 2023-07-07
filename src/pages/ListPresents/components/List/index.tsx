@@ -5,7 +5,7 @@ import { Loader } from '../Loader'
 import { useCart } from '../../../../contexts/contexts'
 
 export function List() {
-  const { listPresents, setListPresents } = useCart()
+  const { newItemCart } = useCart()
   const [currentPage, setCurrentPage] = useState(1)
   const [sortOption, setSortOption] = useState<
     'nameAsc' | 'nameDesc' | 'priceAsc' | 'priceDesc'
@@ -113,15 +113,12 @@ export function List() {
                 <button
                   className="presentear-btn"
                   onClick={() =>
-                    setListPresents([
-                      ...listPresents,
-                      {
-                        id: item.id,
-                        image: item.image,
-                        name: item.name,
-                        price: item.price,
-                      },
-                    ])
+                    newItemCart({
+                      id: item.id,
+                      image: item.image,
+                      name: item.name,
+                      price: item.price,
+                    })
                   }
                 >
                   <strong>Presentear</strong>

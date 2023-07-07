@@ -8,7 +8,6 @@ export function Footer() {
         <img src={Separador} className="imageSeparador" />
         <h1>Gabriel e Letícia</h1>
         <h2>25-11-2023</h2>
-        {/* <img src={flores} className="imageFlores" /> */}
       </FooterContainer>
     </>
   )

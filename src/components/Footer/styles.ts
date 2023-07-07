@@ -6,12 +6,10 @@ export const FooterContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  img.imageFlores {
-    max-width: 250px;
-  }
+
   img.imageSeparador {
     width: 20%;
-    padding: 1rem;
+    padding-bottom: 1rem;
   }
   h1 {
     font-size: 2rem;
