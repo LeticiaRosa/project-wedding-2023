@@ -4,6 +4,7 @@ import {
   ContainerButton,
   TitleForm,
   ContainerSeparatorInputs,
+  PresentButton,
 } from './styles'
 import { useForm } from 'react-hook-form'
 import { Api } from '../../../../api/api'
@@ -146,7 +147,7 @@ export function Form() {
         </ContainerSeparatorInputs>
 
         <ContainerButton>
-          <button type="submit">Confirmar presença</button>
+          <PresentButton type="submit">Confirmar presença</PresentButton>
         </ContainerButton>
       </ContainerForm>
     </>

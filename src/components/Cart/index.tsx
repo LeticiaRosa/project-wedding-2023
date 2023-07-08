@@ -1,5 +1,9 @@
 import { CaretDoubleUp, ShoppingCart, Trash } from 'phosphor-react'
 import {
+  BaseButton,
+  CancelButton,
+  CartIcon,
+  ConcludeButton,
   ContainerButtons,
   ContainerCart,
   ContainerElements,
@@ -8,19 +12,28 @@ import {
   ContainerTitle,
   ContainerTotal,
   FooterCart,
+  NotificationCount,
 } from './styles'
 import { useState } from 'react'
 import { useCart } from '../../contexts/contexts'
 import isValidProp from '@emotion/is-prop-valid'
 import { StyleSheetManager } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-
+import { PaymentModal } from '../PaymentModal'
 export function Cart() {
   const [isExpanded, setIsExpanded] = useState(true)
-  const { removeItemCart, removeAllItemsCart, totalPrice } = useCart()
+  const { removeItemCart, removeAllItemsCart, totalPrice, totalItens } =
+    useCart()
   const navigation = useNavigate()
-
   const { state } = useCart()
+  const [isModalOpen, setIsModalOpen] = useState(true)
+  const handleCheckout = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  }
 
   function handleDeleteItemCart(id: number) {
     removeItemCart(id)
@@ -37,10 +50,19 @@ export function Cart() {
             onClick={() => setIsExpanded((state) => !state)}
             expandedM={isExpanded}
           >
-            <CaretDoubleUp className="icon-rotate" />
+            <CaretDoubleUp
+              className={
+                isExpanded ? 'rotate-clockwise' : 'rotate-counterclockwise'
+              }
+            />
             <p>Meu carrinho</p>
             <ShoppingCart size={22} />
-          </ContainerTitle>
+            <CartIcon>
+              {totalItens > 0 && (
+                <NotificationCount>{totalItens}</NotificationCount>
+              )}
+            </CartIcon>
+          </ContainerTitle>{' '}
           {state.length ? (
             <ContainerListPresents>
               {state.map((item) => {
@@ -75,13 +97,11 @@ export function Cart() {
         </ContainerElements>
         <FooterCart>
           <ContainerRemoveAllItens>
-            <button
-              className="removerItens"
-              onClick={() => handleRemoveAllItemsCart()}
-            >
-              {' '}
-              Remover todos os itens
-            </button>
+            {totalItens > 0 && (
+              <CancelButton onClick={() => handleRemoveAllItemsCart()}>
+                Remover todos os itens
+              </CancelButton>
+            )}
           </ContainerRemoveAllItens>
           <ContainerTotal>
             <p>Subtotal:</p>
@@ -94,19 +114,24 @@ export function Cart() {
           </ContainerTotal>
 
           <ContainerButtons>
-            <button
-              className="continuarCompra"
-              onClick={() => setIsExpanded((state) => !state)}
+            <ConcludeButton
+              onClick={() => {
+                setIsExpanded((state) => !state)
+                handleCheckout()
+              }}
             >
               Concluir compra
-            </button>
+            </ConcludeButton>
+            <PaymentModal isOpen={isModalOpen} onClose={handleCloseModal} />
 
-            <button
-              className="adicionarItens"
-              onClick={() => navigation('/listPresents', { state: true })}
+            <BaseButton
+              onClick={() => {
+                navigation('/listPresents', { state: true })
+                setIsExpanded((state) => !state)
+              }}
             >
               Adicionar Itens
-            </button>
+            </BaseButton>
           </ContainerButtons>
         </FooterCart>
       </ContainerCart>

@@ -19,6 +19,7 @@ export interface ListContextType {
   removeItemCart: (values: number) => void
   removeAllItemsCart: () => void
   totalPrice: number
+  totalItens: number
 }
 
 type ChildrenType = {
@@ -43,6 +44,7 @@ function CartContextProvider({ children }: ChildrenType) {
   }
 
   const totalPrice = state.reduce((total, item) => total + item.price, 0)
+  const totalItens = state.reduce((count) => count + 1, 0)
 
   return (
     <CartContext.Provider
@@ -52,6 +54,7 @@ function CartContextProvider({ children }: ChildrenType) {
         removeItemCart,
         removeAllItemsCart,
         totalPrice,
+        totalItens,
       }}
     >
       {children}

@@ -1,4 +1,5 @@
 import { styled } from 'styled-components'
+import { BaseButton } from '../../../../components/Cart/styles'
 
 export const ContainerForm = styled.form`
   width: 80%;
@@ -86,23 +87,12 @@ export const ContainerButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  button {
-    width: 30%;
-    padding: 1rem;
-    color: ${(props) => props.theme.white};
-
-    border-radius: 8px;
-    border-style: none;
-    border: 0;
-
-    font-size: 1rem;
-    font-weight: bold;
-    gap: 0.5rem;
-    cursor: pointer;
-
-    background-color: ${(props) => props.theme['terra-600']};
-    &:not(:disabled):hover {
-      background-color: ${(props) => props.theme['terra-700']};
-    }
+`
+export const PresentButton = styled(BaseButton)`
+  padding: 1rem;
+  color: ${(props) => props.theme.white};
+  background-color: ${(props) => props.theme['terra-600']};
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme['terra-700']};
   }
 `

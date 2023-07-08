@@ -1,4 +1,4 @@
-import { styled, keyframes, css } from 'styled-components'
+import { styled, keyframes } from 'styled-components'
 
 type menuProps = {
   expandedM: boolean
@@ -18,7 +18,7 @@ export const ContainerCart = styled.div<menuProps>`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   max-width: 400px;
   max-height: 600px;
-  height: ${({ expandedM }) => (expandedM ? '80%' : '80%')};
+  height: ${({ expandedM }) => (expandedM ? '50px' : '80%')};
 
   background: ${({ expandedM }) =>
     expandedM ? 'rgba(255,166,77,1)' : 'rgba(255, 255, 255, 1)'};
@@ -33,49 +33,71 @@ export const ContainerCart = styled.div<menuProps>`
   }
 `
 
-const firstOpenKeyframe = keyframes`
-  0% {
+const rotateClockwise = keyframes`
+  from {
+    transform: rotate(180deg);
+  }
+  to {
     transform: rotate(0deg);
   }
-  100% {
-    transform: rotate(180deg)
+`
+
+const rotateCounterclockwise = keyframes`
+  from {
+    transform: rotate(0deg);
+    
+  }
+  to {
+    transform: rotate(180deg);
   }
 `
 
-const firstCloseKeyFrame = keyframes`
-  0% {
-    transform:rotate(180deg);
-  }
-  100% {
-    transform:rotate(0);
-
-  }
+export const CartIcon = styled.div`
+  position: relative;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 `
 
-const firstOpenAnimation = css`
-  animation: 1s linear ${firstOpenKeyframe} forwards;
+export const NotificationCount = styled.div`
+  position: absolute;
+  top: -5px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: ${(props) => props.theme.red};
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: bold;
 `
 
-const firstCloseAnimation = css`
-  animation: 1s linear ${firstCloseKeyFrame} forwards;
-`
-
-export const ContainerTitle = styled.button<menuProps>`
-  /* display: flex;
+export const ContainerTitle = styled.div<menuProps>`
+  display: flex;
   align-items: center;
   justify-content: start;
   font-weight: 800;
   cursor: pointer;
   margin-bottom: 0.5rem 0;
   padding-bottom: 1rem;
+  border: none;
+  background-color: transparent;
+  width: 100%;
   p {
     padding: 0 1rem;
     z-index: 1;
-  } */
+  }
 
-  ${({ expandedM }) =>
-    expandedM !== null &&
-    (expandedM ? firstOpenAnimation : firstCloseAnimation)}
+  .rotate-clockwise {
+    animation: ${rotateClockwise} 0.5s linear forwards;
+  }
+
+  .rotate-counterclockwise {
+    animation: ${rotateCounterclockwise} 0.5s forwards;
+  }
 `
 
 export const ContainerElements = styled.div`
@@ -173,38 +195,44 @@ export const ContainerTotal = styled.div`
 
 export const ContainerButtons = styled.div`
   display: block;
+`
 
-  button {
-    padding: 8px 16px;
-    margin: 0.3rem;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
+export const BaseButton = styled.button`
+  padding: 0.5rem 1rem;
+  margin: 0.3rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme.gray};
   }
-  .continuarCompra {
-    background-color: ${(props) => props.theme['terra-700']};
+`
 
-    cursor: pointer;
-    color: white;
+export const ConcludeButton = styled(BaseButton)`
+  background-color: ${(props) => props.theme['terra-700']};
 
-    &:not(:disabled):hover {
-      background-color: ${(props) => props.theme['terra-600']};
-    }
-    &:disabled {
-      border-radius: 0;
-      border-bottom: 3px solid ${(props) => props.theme['terra-500']};
-    }
+  cursor: pointer;
+  color: white;
+
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme['terra-600']};
   }
-  .cancelarCompra {
-    color: ${(props) => props.theme.black};
-    &:not(:disabled):hover {
-      background-color: ${(props) => props.theme.gray};
-    }
-    &:disabled {
-      border-radius: 0;
-      border-bottom: 3px solid ${(props) => props.theme.black};
-    }
+  &:disabled {
+    border-radius: 0;
+    border-bottom: 3px solid ${(props) => props.theme['terra-500']};
+  }
+`
+
+export const CancelButton = styled.button`
+  color: ${(props) => props.theme.black};
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme.gray};
+  }
+  &:disabled {
+    border-radius: 0;
+    border-bottom: 3px solid ${(props) => props.theme.black};
   }
 `
