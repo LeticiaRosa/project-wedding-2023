@@ -29,6 +29,7 @@ export const ContainerSeparatorInputs = styled.div`
     width: 100%;
     padding-top: 0.5rem;
   }
+
   input[type='text'] {
     border: 1px solid gray;
     border-radius: 6px;
@@ -36,6 +37,10 @@ export const ContainerSeparatorInputs = styled.div`
     height: 2rem;
     margin: 1rem 0;
     padding: 1.5rem;
+    transition: box-shadow 0.5s ease;
+    &:not(:disabled):hover {
+      box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
+    }
   }
   textarea {
     border: 1px solid gray;
@@ -45,6 +50,10 @@ export const ContainerSeparatorInputs = styled.div`
     margin: 1rem 0;
     padding: 1.5rem;
     resize: none;
+    transition: box-shadow 0.5s ease;
+    &:not(:disabled):hover {
+      box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
+    }
   }
   .radio {
     position: relative;

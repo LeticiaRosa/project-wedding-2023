@@ -213,19 +213,36 @@ export const BaseButton = styled.button`
 
 export const ConcludeButton = styled(BaseButton)`
   background-color: ${(props) => props.theme['terra-700']};
-
-  cursor: pointer;
+  cursor: not-allowed;
   color: white;
 
   &:not(:disabled):hover {
     background-color: ${(props) => props.theme['terra-600']};
+    cursor: pointer;
   }
-  &:disabled {
-    border-radius: 0;
-    border-bottom: 3px solid ${(props) => props.theme['terra-500']};
+  &:disabled:hover .tooltip {
+    display: block;
+    z-index: 1;
   }
 `
-
+export const Tooltip = styled.div`
+  position: relative;
+  opacity: 0.5;
+  cursor: not-allowed;
+  .tooltip {
+    font-size: 0.75rem;
+    position: absolute;
+    width: 90%;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    background-color: #f9f9f9;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+`
 export const CancelButton = styled.button`
   color: ${(props) => props.theme.black};
   &:not(:disabled):hover {

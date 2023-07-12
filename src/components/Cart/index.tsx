@@ -13,26 +13,28 @@ import {
   ContainerTotal,
   FooterCart,
   NotificationCount,
+  Tooltip,
 } from './styles'
 import { useState } from 'react'
 import { useCart } from '../../contexts/contexts'
 import isValidProp from '@emotion/is-prop-valid'
 import { StyleSheetManager } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import { PaymentModal } from '../PaymentModal'
+import { OptionsPaymentModal } from '../OptionsPaymentModal'
 export function Cart() {
   const [isExpanded, setIsExpanded] = useState(true)
   const { removeItemCart, removeAllItemsCart, totalPrice, totalItens } =
     useCart()
   const navigation = useNavigate()
   const { state } = useCart()
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [isOptionsPaymentModalOpen, setIsOptionsPaymentModalOpen] =
+    useState(false)
   const handleCheckout = () => {
-    setIsModalOpen(true)
+    setIsOptionsPaymentModalOpen(true)
   }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
+  const handleCloseOptionsPaymentModal = () => {
+    setIsOptionsPaymentModalOpen(false)
   }
 
   function handleDeleteItemCart(id: number) {
@@ -114,15 +116,24 @@ export function Cart() {
           </ContainerTotal>
 
           <ContainerButtons>
-            <ConcludeButton
-              onClick={() => {
-                setIsExpanded((state) => !state)
-                handleCheckout()
-              }}
-            >
-              Concluir compra
-            </ConcludeButton>
-            <PaymentModal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <Tooltip>
+              <ConcludeButton
+                disabled={totalItens <= 0}
+                onClick={() => {
+                  setIsExpanded((state) => !state)
+                  handleCheckout()
+                }}
+              >
+                Concluir compra
+              </ConcludeButton>
+
+              <span className="tooltip">Adicione itens ao carrinho</span>
+            </Tooltip>
+
+            <OptionsPaymentModal
+              isOptionsPaymentModalOpen={isOptionsPaymentModalOpen}
+              onOptionsPaymentModalClose={handleCloseOptionsPaymentModal}
+            />
 
             <BaseButton
               onClick={() => {
