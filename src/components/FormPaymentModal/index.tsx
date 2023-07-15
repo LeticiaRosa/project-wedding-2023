@@ -10,6 +10,7 @@ import {
   ModalFooter,
   CancelButton,
   PaymentButton,
+  DivPrice,
 } from './styles'
 import isValidProp from '@emotion/is-prop-valid'
 
@@ -89,13 +90,15 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
             </ContainerSeparatorInputs>
           </ModalBody>
 
-          <h4>
-            Valor:
-            {(totalPrice / 100).toLocaleString('pt-br', {
-              style: 'currency',
-              currency: 'BRL',
-            })}
-          </h4>
+          <DivPrice>
+            <p>Valor Total: </p>
+            <h4>
+              {(totalPrice / 100).toLocaleString('pt-br', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+            </h4>
+          </DivPrice>
 
           <ModalFooter>
             <CancelButton onClick={onClose}>Voltar</CancelButton>

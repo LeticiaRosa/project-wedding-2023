@@ -210,39 +210,63 @@ export const BaseButton = styled.button`
     background-color: ${(props) => props.theme.gray};
   }
 `
+export const Tooltip = styled.div`
+  background-color: red;
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    left: -20%;
+    top: -70px;
+    margin-left: -145px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.75rem;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+  }
+`
 
 export const ConcludeButton = styled(BaseButton)`
   background-color: ${(props) => props.theme['terra-700']};
-  cursor: not-allowed;
   color: white;
 
+  &:disabled {
+    background-color: ${(props) => props.theme['terra-300']};
+    cursor: not-allowed;
+  }
+  &:disabled:hover {
+    /* Exibe o Tooltip quando o botão estiver desabilitado */
+    + ${Tooltip} {
+      .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
   &:not(:disabled):hover {
     background-color: ${(props) => props.theme['terra-600']};
     cursor: pointer;
   }
-  &:disabled:hover .tooltip {
-    display: block;
-    z-index: 1;
-  }
 `
-export const Tooltip = styled.div`
-  position: relative;
-  opacity: 0.5;
-  cursor: not-allowed;
-  .tooltip {
-    font-size: 0.75rem;
-    position: absolute;
-    width: 90%;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: none;
-    background-color: #f9f9f9;
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-`
+
 export const CancelButton = styled.button`
   color: ${(props) => props.theme.black};
   &:not(:disabled):hover {

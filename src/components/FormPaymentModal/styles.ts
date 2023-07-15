@@ -11,6 +11,7 @@ export const ModalOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 `
 
 export const ModalContentWrapper = styled.div`
@@ -19,6 +20,8 @@ export const ModalContentWrapper = styled.div`
   border-radius: 4px;
   max-width: 500px;
   width: 100%;
+  overflow: auto;
+  max-height: 600px;
 `
 
 export const ModalHeader = styled.div`
@@ -47,7 +50,7 @@ export const CloseButton = styled.button`
 `
 
 export const ModalBody = styled.div`
-  padding: 2rem 0px;
+  padding: 0.5rem 0px 1rem 0;
 `
 export const ContainerSeparatorInputs = styled.div`
   label {
@@ -69,12 +72,22 @@ export const ContainerSeparatorInputs = styled.div`
     border-radius: 6px;
     width: 100%;
     height: 2rem;
-    margin: 0.75rem 0;
-    padding: 1.5rem;
+    margin: 0.5rem 0;
+    padding: 1.5rem 1rem;
     transition: box-shadow 0.5s ease;
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
+  }
+`
+
+export const DivPrice = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 3rem;
+  h4 {
+    font-size: 1.5rem;
   }
 `
 

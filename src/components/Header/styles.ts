@@ -27,7 +27,7 @@ export const MenuContainer = styled.div`
   top: 0;
   width: 100%;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 100;
   div {
     display: flex;
     align-items: center;

@@ -116,17 +116,16 @@ export function Cart() {
           </ContainerTotal>
 
           <ContainerButtons>
+            <ConcludeButton
+              disabled={totalItens <= 0}
+              onClick={() => {
+                setIsExpanded((state) => !state)
+                handleCheckout()
+              }}
+            >
+              Concluir compra
+            </ConcludeButton>
             <Tooltip>
-              <ConcludeButton
-                disabled={totalItens <= 0}
-                onClick={() => {
-                  setIsExpanded((state) => !state)
-                  handleCheckout()
-                }}
-              >
-                Concluir compra
-              </ConcludeButton>
-
               <span className="tooltip">Adicione itens ao carrinho</span>
             </Tooltip>
 
