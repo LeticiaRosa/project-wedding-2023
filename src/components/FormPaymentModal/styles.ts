@@ -31,7 +31,7 @@ export const ModalHeader = styled.div`
   padding-bottom: 10px;
 `
 
-export const ModalTitle = styled.p`
+export const ModalTitle = styled.div`
   margin: 0;
   font-weight: 600;
   p {
