@@ -31,8 +31,8 @@ interface DataForm {
   email: string
   cpf: string
   phone: string
+  quota: string
 }
-
 export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
     defaultValues: {
@@ -40,6 +40,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
       email: '',
       cpf: '',
       phone: '',
+      quota: '1',
     },
   })
   const { totalPrice } = useCart()
@@ -130,6 +131,13 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     setValue('phone', formattedValue)
   }
 
+  const handleChangeQuota = (event: ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value
+    setValue('quota', value)
+  }
+
+  const quotas: number[] = [1, 2, 3, 4, 5, 6] // Exemplo de opções de parcelas
+
   return (
     <StyleSheetManager shouldForwardProp={isValidProp}>
       <ModalOverlay onClick={onClose}>
@@ -139,11 +147,10 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
               <ModalTitle>
                 <p>Dados para emissão do {typeModal}</p>
                 <span>
-                  Os campos marcados com asterisco (*) são de preenchimento
-                  obrigatório.
+                  Campos com asterisco (*) são de preenchimento obrigatório.
                 </span>
               </ModalTitle>
-              <CloseButton onClick={onClose}>
+              <CloseButton type="button" onClick={onClose}>
                 <X size={25} />
               </CloseButton>
             </ModalHeader>
@@ -162,10 +169,10 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
 
               <ContainerSeparatorInputs>
                 <label htmlFor="email">E-mail*</label>
-                <p>
+                {/* <p>
                   (Você receberá o QR Code e a confirmação de pagamento recebido
                   neste e-mail)
-                </p>
+                </p> */}
                 <input
                   type="email"
                   id="email"
@@ -211,6 +218,36 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
                       placeholder="Informe seu Telefone"
                       required
                     />
+                  )}
+                />
+              </ContainerSeparatorInputs>
+              <ContainerSeparatorInputs>
+                <label htmlFor="quota">Modo de Parcelamento*</label>
+                <Controller
+                  name="quota"
+                  control={control}
+                  render={({ field: { value, ref } }) => (
+                    <select
+                      id="quota"
+                      {...register('quota')}
+                      value={value}
+                      ref={ref}
+                      onChange={(e) => handleChangeQuota(e)}
+                    >
+                      {quotas.map((option) => (
+                        <option key={option} value={option}>
+                          {`${option} parcela(s) de ${(
+                            totalPrice /
+                            100 /
+                            option
+                          ).toLocaleString('pt-br', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })}
+                      sem juros`}
+                        </option>
+                      ))}
+                    </select>
                   )}
                 />
               </ContainerSeparatorInputs>

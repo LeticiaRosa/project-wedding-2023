@@ -68,13 +68,28 @@ export const ContainerSeparatorInputs = styled.div`
   }
 
   input {
-    border: 1px solid gray;
+    border: 1px solid ${(props) => props.theme.gray};
     border-radius: 6px;
     width: 100%;
     height: 2rem;
     margin: 0.5rem 0;
     padding: 1.5rem 1rem;
     transition: box-shadow 0.5s ease;
+    &:not(:disabled):hover {
+      box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
+    }
+  }
+
+  select {
+    padding: 0.9rem;
+    margin: 0.5rem 0;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid ${(props) => props.theme.gray};
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: box-shadow 0.5s ease;
+
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
