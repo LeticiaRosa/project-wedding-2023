@@ -8,6 +8,7 @@ export default defineConfig({
   // Outras configurações
   plugins: [react(), reactSvg()],
   server: {
+    host: true,
     port: 5050,
     proxy: {
       '/customers': {

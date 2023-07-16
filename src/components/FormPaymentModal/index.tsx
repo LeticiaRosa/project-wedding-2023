@@ -17,9 +17,10 @@ import isValidProp from '@emotion/is-prop-valid'
 import { X } from 'phosphor-react'
 import { useCart } from '../../contexts/contexts'
 import { Controller, useForm } from 'react-hook-form'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { formatCPF, formatPhone } from '../../utils/formatteds'
 import { api } from '../../services/apiAssas'
+import { FormCreditCard } from './components/FormCreditCard'
 
 interface modalProps {
   isOpen: boolean
@@ -34,13 +35,13 @@ interface DataForm {
   quota: string
 }
 export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
+  const [isOpenStep, setIsOpen] = useState(false)
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
     defaultValues: {
       name: '',
       email: '',
       cpf: '',
       phone: '',
-      quota: '1',
     },
   })
   const { totalPrice } = useCart()
@@ -81,42 +82,45 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     }
   }
 
-  function createPayment(data: any) {
-    console.log(data)
-    // api
-    //   .post('/payments', data)
-    //   .then((response) => console.log(`Deu certo: ${response.data}`))
-    //   .catch((error) => console.log(`Erro ao enviar o post: ${error.message}`))
-  }
+  // function createPayment(data: any) {
+  //   console.log(data)
+  //   // api
+  //   //   .post('/payments', data)
+  //   //   .then((response) => console.log(`Deu certo: ${response.data}`))
+  //   //   .catch((error) => console.log(`Erro ao enviar o post: ${error.message}`))
+  // }
 
-  async function handlePay(data: DataForm) {
+  async function handleGo(data: DataForm) {
     createClient({ name: data.name, cpfCnpj: data.cpf })
     const idCustomer = await listClient(data.cpf)
-    createPayment({
-      billingType: 'CREDIT_CARD',
-      creditCard: {
-        holderName: 'teste',
-        number: '4444 4444 4444 4444',
-        expiryMonth: '06',
-        expiryYear: '2024',
-        ccv: '123',
-      },
-      creditCardHolderInfo: {
-        name: 'teste',
-        email: 'teste@teste.com',
-        cpfCnpj: '12477339630',
-        postalCode: '30285738',
-        addressNumber: 'rua luiza mascarenhas',
-        addressComplement: '177',
-        phone: '31984621493',
-        mobilePhone: '31984621493',
-      },
-      dueDate: new Date(),
-      value: 100,
-      customer: `${idCustomer}`,
-      authorizeOnly: true,
-      remoteIp: '138.121.66.87',
-    })
+    console.log(idCustomer)
+    setIsOpen(true)
+
+    // createPayment({
+    //   billingType: 'CREDIT_CARD',
+    //   creditCard: {
+    //     holderName: 'teste',
+    //     number: '4444 4444 4444 4444',
+    //     expiryMonth: '06',
+    //     expiryYear: '2024',
+    //     ccv: '123',
+    //   },
+    //   creditCardHolderInfo: {
+    //     name: 'teste',
+    //     email: 'teste@teste.com',
+    //     cpfCnpj: '12477339630',
+    //     postalCode: '30285738',
+    //     addressNumber: 'rua luiza mascarenhas',
+    //     addressComplement: '177',
+    //     phone: '31984621493',
+    //     mobilePhone: '31984621493',
+    //   },
+    //   dueDate: new Date(),
+    //   value: 100,
+    //   customer: `${idCustomer}`,
+    //   authorizeOnly: true,
+    //   remoteIp: '138.121.66.87',
+    // })
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -131,18 +135,11 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     setValue('phone', formattedValue)
   }
 
-  const handleChangeQuota = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value
-    setValue('quota', value)
-  }
-
-  const quotas: number[] = [1, 2, 3, 4, 5, 6] // Exemplo de opções de parcelas
-
   return (
     <StyleSheetManager shouldForwardProp={isValidProp}>
       <ModalOverlay onClick={onClose}>
         <ModalContentWrapper onClick={(e: any) => e.stopPropagation()}>
-          <form action="submit" onSubmit={handleSubmit(handlePay)}>
+          <form action="submit" onSubmit={handleSubmit(handleGo)}>
             <ModalHeader>
               <ModalTitle>
                 <p>Dados para emissão do {typeModal}</p>
@@ -221,36 +218,6 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
                   )}
                 />
               </ContainerSeparatorInputs>
-              <ContainerSeparatorInputs>
-                <label htmlFor="quota">Modo de Parcelamento*</label>
-                <Controller
-                  name="quota"
-                  control={control}
-                  render={({ field: { value, ref } }) => (
-                    <select
-                      id="quota"
-                      {...register('quota')}
-                      value={value}
-                      ref={ref}
-                      onChange={(e) => handleChangeQuota(e)}
-                    >
-                      {quotas.map((option) => (
-                        <option key={option} value={option}>
-                          {`${option} parcela(s) de ${(
-                            totalPrice /
-                            100 /
-                            option
-                          ).toLocaleString('pt-br', {
-                            style: 'currency',
-                            currency: 'BRL',
-                          })}
-                      sem juros`}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                />
-              </ContainerSeparatorInputs>
             </ModalBody>
 
             <DivPrice>
@@ -267,10 +234,11 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
               <CancelButton onClick={onClose} type="button">
                 Voltar
               </CancelButton>
-              <PaymentButton type="submit">Realizar Pagamento</PaymentButton>
+              <PaymentButton type="submit">Avançar</PaymentButton>
             </ModalFooter>
           </form>
         </ModalContentWrapper>
+        {isOpenStep && typeModal === 'Credito' && <FormCreditCard />}
       </ModalOverlay>
     </StyleSheetManager>
   )
