@@ -52,11 +52,33 @@ export const CloseButton = styled.button`
 export const ModalBody = styled.div`
   padding: 0.5rem 0px 1rem 0;
 `
+export const ContainerTitleForm = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const TitleForm = styled.h4`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 10px;
+  padding: 0 0.5rem;
+  position: relative;
+  background-color: white;
+`
+export const BoxContainer = styled.div`
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+`
 export const ContainerSeparatorInputs = styled.div`
   label {
     width: 100%;
     display: block;
     font-weight: 600;
+    font-size: 0.75rem;
   }
   legend {
     width: 100%;
@@ -65,15 +87,16 @@ export const ContainerSeparatorInputs = styled.div`
 
   p {
     font-size: 0.7rem;
+    font-style: italic;
   }
 
   input {
     border: 1px solid ${(props) => props.theme.gray};
     border-radius: 6px;
     width: 100%;
-    height: 2rem;
+    height: 1rem;
     margin: 0.5rem 0;
-    padding: 1.5rem 1rem;
+    padding: 1rem 1rem;
     transition: box-shadow 0.5s ease;
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
@@ -81,19 +104,24 @@ export const ContainerSeparatorInputs = styled.div`
   }
 
   select {
-    padding: 0.9rem;
-    margin: 0.5rem 0;
     width: 100%;
     border-radius: 6px;
     border: 1px solid ${(props) => props.theme.gray};
     gap: 0.5rem;
     cursor: pointer;
     transition: box-shadow 0.5s ease;
-
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
   }
+`
+
+export const SeparatorInputs = styled.div`
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
 `
 
 export const DivPrice = styled.div`

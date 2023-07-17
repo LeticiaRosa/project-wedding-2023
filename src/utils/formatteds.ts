@@ -40,3 +40,9 @@ export const formatPhone = (value: string) => {
 
   return cleanedValue
 }
+
+export const formatCEP = (value: string) => {
+  value = value.replace(/\D/g, '') // Remove caracteres não numéricos
+  value = value.replace(/^(\d{5})(\d)/, '$1-$2') // Aplica a máscara XXXXX-XXX
+  return value
+}

@@ -35,7 +35,7 @@ interface DataForm {
   quota: string
 }
 export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
-  const [isOpenStep, setIsOpen] = useState(false)
+  const [isOpenStep, setIsOpenStep] = useState(false)
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
     defaultValues: {
       name: '',
@@ -45,9 +45,6 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     },
   })
   const { totalPrice } = useCart()
-  if (!isOpen) {
-    return null
-  }
 
   async function createClient(data: any) {
     const cpfCnpj = data.cpfCnpj.replace(/[.-]/g, '')
@@ -82,19 +79,11 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     }
   }
 
-  // function createPayment(data: any) {
-  //   console.log(data)
-  //   // api
-  //   //   .post('/payments', data)
-  //   //   .then((response) => console.log(`Deu certo: ${response.data}`))
-  //   //   .catch((error) => console.log(`Erro ao enviar o post: ${error.message}`))
-  // }
-
   async function handleGo(data: DataForm) {
     createClient({ name: data.name, cpfCnpj: data.cpf })
     const idCustomer = await listClient(data.cpf)
     console.log(idCustomer)
-    setIsOpen(true)
+    setIsOpenStep(true)
 
     // createPayment({
     //   billingType: 'CREDIT_CARD',
@@ -136,110 +125,112 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
   }
 
   return (
-    <StyleSheetManager shouldForwardProp={isValidProp}>
-      <ModalOverlay onClick={onClose}>
-        <ModalContentWrapper onClick={(e: any) => e.stopPropagation()}>
-          <form action="submit" onSubmit={handleSubmit(handleGo)}>
-            <ModalHeader>
-              <ModalTitle>
-                <p>Dados para emissão do {typeModal}</p>
-                <span>
-                  Campos com asterisco (*) são de preenchimento obrigatório.
-                </span>
-              </ModalTitle>
-              <CloseButton type="button" onClick={onClose}>
-                <X size={25} />
-              </CloseButton>
-            </ModalHeader>
-            <ModalBody>
-              <ContainerSeparatorInputs>
-                <label htmlFor="name">Nome completo*</label>
-                <input
-                  type="text"
-                  id="name"
-                  minLength={2}
-                  placeholder="Informe seu nome"
-                  required
-                  {...register('name')}
-                />
-              </ContainerSeparatorInputs>
-
-              <ContainerSeparatorInputs>
-                <label htmlFor="email">E-mail*</label>
-                {/* <p>
+    isOpen && (
+      <StyleSheetManager shouldForwardProp={isValidProp}>
+        <ModalOverlay onClick={onClose}>
+          <ModalContentWrapper onClick={(e: any) => e.stopPropagation()}>
+            <form action="submit" onSubmit={handleSubmit(handleGo)}>
+              <ModalHeader>
+                <ModalTitle>
+                  <p>Dados para emissão do {typeModal}</p>
+                  <span>
+                    Campos com asterisco (*) são de preenchimento obrigatório.
+                  </span>
+                </ModalTitle>
+                <CloseButton type="button" onClick={onClose}>
+                  <X size={25} />
+                </CloseButton>
+              </ModalHeader>
+              <ModalBody>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="name">Nome completo*</label>
+                  <input
+                    type="text"
+                    id="name"
+                    minLength={2}
+                    placeholder="Informe seu nome"
+                    required
+                    {...register('name')}
+                  />
+                </ContainerSeparatorInputs>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="cpf">CPF*</label>
+                  <Controller
+                    name="cpf"
+                    control={control}
+                    render={({ field: { value, ref } }) => (
+                      <input
+                        type="text"
+                        id="cpf"
+                        onChange={(e) => handleChange(e)}
+                        value={value}
+                        ref={ref}
+                        maxLength={14}
+                        placeholder="Informe seu CPF"
+                        required
+                      />
+                    )}
+                  />
+                </ContainerSeparatorInputs>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="email">E-mail</label>
+                  {/* <p>
                   (Você receberá o QR Code e a confirmação de pagamento recebido
                   neste e-mail)
                 </p> */}
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="Informe seu e-mail"
-                  required
-                  {...register('email')}
-                />
-              </ContainerSeparatorInputs>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Informe seu e-mail"
+                    required
+                    {...register('email')}
+                  />
+                </ContainerSeparatorInputs>
 
-              <ContainerSeparatorInputs>
-                <label htmlFor="cpf">CPF*</label>
-                <Controller
-                  name="cpf"
-                  control={control}
-                  render={({ field: { value, ref } }) => (
-                    <input
-                      type="text"
-                      id="cpf"
-                      onChange={(e) => handleChange(e)}
-                      value={value}
-                      ref={ref}
-                      maxLength={14}
-                      placeholder="Informe seu CPF"
-                      required
-                    />
-                  )}
-                />
-              </ContainerSeparatorInputs>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="telefone">Telefone</label>
+                  <Controller
+                    name="phone"
+                    control={control}
+                    render={({ field: { value, ref } }) => (
+                      <input
+                        type="text"
+                        id="phone"
+                        onChange={(e) => handleChangePhone(e)}
+                        value={value}
+                        ref={ref}
+                        maxLength={15}
+                        placeholder="Informe seu Telefone"
+                        required
+                      />
+                    )}
+                  />
+                </ContainerSeparatorInputs>
+              </ModalBody>
 
-              <ContainerSeparatorInputs>
-                <label htmlFor="telefone">Telefone*</label>
-                <Controller
-                  name="phone"
-                  control={control}
-                  render={({ field: { value, ref } }) => (
-                    <input
-                      type="text"
-                      id="phone"
-                      onChange={(e) => handleChangePhone(e)}
-                      value={value}
-                      ref={ref}
-                      maxLength={15}
-                      placeholder="Informe seu Telefone"
-                      required
-                    />
-                  )}
-                />
-              </ContainerSeparatorInputs>
-            </ModalBody>
+              <DivPrice>
+                <p>Valor Total: </p>
+                <h4>
+                  {(totalPrice / 100).toLocaleString('pt-br', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </h4>
+              </DivPrice>
 
-            <DivPrice>
-              <p>Valor Total: </p>
-              <h4>
-                {(totalPrice / 100).toLocaleString('pt-br', {
-                  style: 'currency',
-                  currency: 'BRL',
-                })}
-              </h4>
-            </DivPrice>
-
-            <ModalFooter>
-              <CancelButton onClick={onClose} type="button">
-                Voltar
-              </CancelButton>
-              <PaymentButton type="submit">Avançar</PaymentButton>
-            </ModalFooter>
-          </form>
-        </ModalContentWrapper>
-        {isOpenStep && typeModal === 'Credito' && <FormCreditCard />}
-      </ModalOverlay>
-    </StyleSheetManager>
+              <ModalFooter>
+                <CancelButton onClick={onClose} type="button">
+                  Voltar
+                </CancelButton>
+                <PaymentButton type="submit">Avançar</PaymentButton>
+              </ModalFooter>
+            </form>
+          </ModalContentWrapper>
+        </ModalOverlay>
+        {isOpenStep && typeModal === 'Credito' && (
+          <FormCreditCard onCloseStep={() => setIsOpenStep(false)} />
+        )}
+      </StyleSheetManager>
+    )
   )
 }

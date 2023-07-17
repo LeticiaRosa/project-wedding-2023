@@ -80,14 +80,9 @@ export function OptionsPaymentModal({
               </ContainerTitleButton>
             </OptionsButton>
           </ModalBody>
-          {/* <ModalFooter>
-            <CancelButton onClick={onOptionsPaymentModalClose}>Cancelar Compra</CancelButton>
-            <PaymentButton onClick={handlePayment}>
-              Realizar Pagamento
-            </PaymentButton>
-          </ModalFooter> */}
         </ModalContentWrapper>
       </ModalOverlay>
+
       <FormPaymentModal
         isOpen={isModalOpen}
         onClose={handleCloseModalForm}
