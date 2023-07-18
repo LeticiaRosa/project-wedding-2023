@@ -36,6 +36,7 @@ interface DataForm {
 }
 export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
   const [isOpenStep, setIsOpenStep] = useState(false)
+  const [clientId, setClientId] = useState('')
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
     defaultValues: {
       name: '',
@@ -58,7 +59,9 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
           })
         }
       })
-      .catch((error) => console.log(`Erro ao enviar o post: ${error.message}`))
+      .catch((error) =>
+        console.log(`Erro ao criar o cliente: ${error.message}`),
+      )
   }
 
   async function listClient(cpf: string) {
@@ -74,7 +77,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
         )
       return response[0].id
     } catch (error: any) {
-      console.log(`Erro ao enviar o GET: ${error.message}`)
+      console.log(`Erro ao buscar o cliente: ${error.message}`)
       return null // Retorna null em caso de erro
     }
   }
@@ -82,34 +85,8 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
   async function handleGo(data: DataForm) {
     createClient({ name: data.name, cpfCnpj: data.cpf })
     const idCustomer = await listClient(data.cpf)
-    console.log(idCustomer)
+    setClientId(idCustomer)
     setIsOpenStep(true)
-
-    // createPayment({
-    //   billingType: 'CREDIT_CARD',
-    //   creditCard: {
-    //     holderName: 'teste',
-    //     number: '4444 4444 4444 4444',
-    //     expiryMonth: '06',
-    //     expiryYear: '2024',
-    //     ccv: '123',
-    //   },
-    //   creditCardHolderInfo: {
-    //     name: 'teste',
-    //     email: 'teste@teste.com',
-    //     cpfCnpj: '12477339630',
-    //     postalCode: '30285738',
-    //     addressNumber: 'rua luiza mascarenhas',
-    //     addressComplement: '177',
-    //     phone: '31984621493',
-    //     mobilePhone: '31984621493',
-    //   },
-    //   dueDate: new Date(),
-    //   value: 100,
-    //   customer: `${idCustomer}`,
-    //   authorizeOnly: true,
-    //   remoteIp: '138.121.66.87',
-    // })
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +109,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
             <form action="submit" onSubmit={handleSubmit(handleGo)}>
               <ModalHeader>
                 <ModalTitle>
-                  <p>Dados para emissão do {typeModal}</p>
+                  <p>Preencha os seus dados</p>
                   <span>
                     Campos com asterisco (*) são de preenchimento obrigatório.
                   </span>
@@ -209,7 +186,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
               </ModalBody>
 
               <DivPrice>
-                <p>Valor Total: </p>
+                <p>Subtotal: </p>
                 <h4>
                   {(totalPrice / 100).toLocaleString('pt-br', {
                     style: 'currency',
@@ -228,7 +205,10 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
           </ModalContentWrapper>
         </ModalOverlay>
         {isOpenStep && typeModal === 'Credito' && (
-          <FormCreditCard onCloseStep={() => setIsOpenStep(false)} />
+          <FormCreditCard
+            clientId={clientId}
+            onCloseStep={() => setIsOpenStep(false)}
+          />
         )}
       </StyleSheetManager>
     )

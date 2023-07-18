@@ -19,7 +19,13 @@ import {
 } from './styles'
 import { ChangeEvent, useState } from 'react'
 import { X } from 'phosphor-react'
-import { formatCEP, formatCPF, formatPhone } from '../../../../utils/formatteds'
+import {
+  formatCEP,
+  formatCPF,
+  formatCreditCardNumber,
+  formatPhone,
+} from '../../../../utils/formatteds'
+import { api } from '../../../../services/apiAssas'
 
 interface DataForm {
   quota: string
@@ -38,11 +44,12 @@ interface DataForm {
 }
 interface modalProps {
   onCloseStep: () => void
+  clientId: string
 }
-export function FormCreditCard({ onCloseStep }: modalProps) {
+export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
   const { totalPrice } = useCart()
   const [totalPriceWithParc, setTotalPriceWithParc] = useState(totalPrice / 100)
-  const { register, control, setValue } = useForm<DataForm>({
+  const { register, control, setValue, handleSubmit } = useForm<DataForm>({
     defaultValues: {
       quota: '1',
       name: '',
@@ -73,7 +80,7 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
   const handleChangeQuota = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value
     setValue('quota', value)
-    const totalPrice = calculeValue(parseInt(value)) * parseInt(value)
+    const totalPrice = calculeValue(Number(value)) * Number(value)
     setTotalPriceWithParc(totalPrice)
   }
 
@@ -99,6 +106,14 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
     setValue('postalCode', formattedValue)
   }
 
+  const handleChangeNumberCreditCard = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = event.target.value
+    const formattedValue = formatCreditCardNumber(value)
+    setValue('numberCreditCard', formattedValue)
+  }
+
   const months = [
     '01',
     '02',
@@ -121,10 +136,56 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
     year.push(anoAtual + i)
   }
 
+  async function createPayment(data: any) {
+    await api
+      .post('/payments', data)
+      .then((body) => {
+        return body.data.data
+      })
+      .catch((error) =>
+        console.log(`Erro ao enviar o pagamento: ${error.message}`),
+      )
+  }
+
+  function handlePay(data: DataForm) {
+    console.log(data.quota)
+    console.log(totalPriceWithParc)
+    console.log(Number(data.quota))
+    console.log(totalPriceWithParc * Number(data.quota))
+    const dataFormatted = {
+      billingType: 'CREDIT_CARD',
+      creditCard: {
+        holderName: data.holderName,
+        number: data.numberCreditCard,
+        expiryMonth: data.expiryMonth,
+        expiryYear: data.expiryYear,
+        ccv: data.ccv,
+      },
+      creditCardHolderInfo: {
+        name: data.name,
+        email: data.email,
+        cpfCnpj: data.cpfCnpj.replace(/[.-]/g, ''),
+        postalCode: data.postalCode.replace(/\D/g, ''),
+        addressNumber: data.addressNumber,
+        phone: data.phone.replace(/\D/g, ''),
+      },
+      dueDate: new Date(),
+      installmentCount: Number(data.quota),
+      installmentValue: parseFloat(
+        (totalPriceWithParc / Number(data.quota)).toFixed(2),
+      ),
+      value: parseFloat(totalPriceWithParc.toFixed(2)),
+      customer: clientId,
+      authorizeOnly: true,
+      remoteIp: '138.121.66.87',
+    }
+    createPayment(dataFormatted)
+  }
+
   return (
     <ModalOverlay>
       <ModalContentWrapper>
-        <form action="submit">
+        <form action="submit" onSubmit={handleSubmit(handlePay)}>
           <ModalHeader>
             <ModalTitle>
               <p>Preencha os dados para realizar o pagamento</p>
@@ -256,9 +317,10 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
                     <input
                       type="text"
                       id="numberCreditCard"
+                      onChange={(e) => handleChangeNumberCreditCard(e)}
                       value={value}
                       ref={ref}
-                      maxLength={14}
+                      maxLength={19}
                       placeholder="Número do cartão"
                       required
                     />
@@ -283,7 +345,7 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
 
                   <select
                     id="expiryMonth"
-                    value="01"
+                    required
                     {...register('expiryMonth')}
                   >
                     {months.map((n) => (
@@ -296,11 +358,7 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
                 <ContainerSeparatorInputs>
                   <label htmlFor="expiryYear">Ano de expiração</label>
 
-                  <select
-                    id="expiryYear"
-                    value="2023"
-                    {...register('expiryYear')}
-                  >
+                  <select id="expiryYear" required {...register('expiryYear')}>
                     {year.map((n) => (
                       <option key={n} value={n}>
                         {n}
@@ -330,6 +388,7 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
                       id="quota"
                       {...register('quota')}
                       value={value}
+                      required
                       ref={ref}
                       onChange={(e) => handleChangeQuota(e)}
                     >
@@ -349,32 +408,31 @@ export function FormCreditCard({ onCloseStep }: modalProps) {
                   )}
                 />
               </ContainerSeparatorInputs>
-              <ContainerSeparatorInputs>
-                <p>
-                  Total parcelado:{' '}
-                  {totalPriceWithParc.toLocaleString('pt-br', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  })}
-                </p>
-              </ContainerSeparatorInputs>
             </BoxContainer>
           </ModalBody>
 
           <DivPrice>
-            <p>Valor Total: </p>
-            <h4>
+            <p>
+              Subtotal:{' '}
               {(totalPrice / 100).toLocaleString('pt-br', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+            </p>
+            <h4>
+              {'Total: '}
+              {totalPriceWithParc.toLocaleString('pt-br', {
                 style: 'currency',
                 currency: 'BRL',
               })}
             </h4>
           </DivPrice>
+
           <ModalFooter>
             <CancelButton type="button" onClick={() => handleClose()}>
               Voltar
             </CancelButton>
-            <PaymentButton type="submit">Pagar</PaymentButton>
+            <PaymentButton type="submit">Realizar o pagamento</PaymentButton>
           </ModalFooter>
         </form>
       </ModalContentWrapper>

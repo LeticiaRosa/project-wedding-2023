@@ -46,3 +46,16 @@ export const formatCEP = (value: string) => {
   value = value.replace(/^(\d{5})(\d)/, '$1-$2') // Aplica a máscara XXXXX-XXX
   return value
 }
+
+export const formatCreditCardNumber = (creditCardNumber: string) => {
+  // Remove espaços em branco e caracteres não numéricos
+  const cleanedNumber = creditCardNumber.replace(/\D/g, '')
+
+  // Define o padrão para a formatação
+  const pattern = /(\d{1,4})/g
+
+  // Formata o número aplicando os grupos separados por espaços
+  const formattedNumber = cleanedNumber.replace(pattern, '$1 ')
+
+  return formattedNumber.trim() // Remove espaços extras no início ou final
+}

@@ -28,7 +28,6 @@ export const ModalHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
 `
 
 export const ModalTitle = styled.div`
@@ -71,7 +70,6 @@ export const BoxContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 1rem;
-  margin-bottom: 1rem;
 `
 export const ContainerSeparatorInputs = styled.div`
   label {
@@ -126,11 +124,17 @@ export const SeparatorInputs = styled.div`
 
 export const DivPrice = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: end;
   justify-content: end;
-  gap: 3rem;
+  padding-bottom: 1rem;
+
   h4 {
     font-size: 1.5rem;
+  }
+  p {
+    font-size: 0.85rem;
+    padding: 3px;
   }
 `
 
