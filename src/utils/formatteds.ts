@@ -42,9 +42,9 @@ export const formatPhone = (value: string) => {
 }
 
 export const formatCEP = (value: string) => {
-  value = value.replace(/\D/g, '') // Remove caracteres não numéricos
-  value = value.replace(/^(\d{5})(\d)/, '$1-$2') // Aplica a máscara XXXXX-XXX
-  return value
+  const cepFormattedSpaces = value.replace(/\D/g, '') // Remove caracteres não numéricos
+  const cepFormatted = cepFormattedSpaces.replace(/^(\d{5})(\d{3})/, '$1-$2') // Aplica a máscara XXXXX-XXX
+  return cepFormatted
 }
 
 export const formatCreditCardNumber = (creditCardNumber: string) => {

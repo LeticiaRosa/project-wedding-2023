@@ -26,7 +26,8 @@ import {
   formatPhone,
 } from '../../../../utils/formatteds'
 import { api } from '../../../../services/apiAssas'
-
+import { ToastContainer, toast } from 'react-toastify'
+import { returnError } from '../../../../utils/response_api'
 interface DataForm {
   quota: string
   name: string
@@ -46,8 +47,9 @@ interface modalProps {
   onCloseStep: () => void
   clientId: string
 }
+
 export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
-  const { totalPrice } = useCart()
+  const { totalPrice, removeAllItemsCart } = useCart()
   const [totalPriceWithParc, setTotalPriceWithParc] = useState(totalPrice / 100)
   const { register, control, setValue, handleSubmit } = useForm<DataForm>({
     defaultValues: {
@@ -60,8 +62,8 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
       addressNumber: '',
       holderName: '',
       numberCreditCard: '',
-      expiryMonth: '',
-      expiryYear: '',
+      expiryMonth: '01',
+      expiryYear: '2023',
       ccv: '',
       priceTotalWithParce: 0,
     },
@@ -114,20 +116,12 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
     setValue('numberCreditCard', formattedValue)
   }
 
-  const months = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
-  ]
+  const months = []
+  for (let i = 0; i <= 11; i++) {
+    const month = (i + 1).toString().padStart(2, '0')
+    months.push(month)
+  }
+
   const anoAtual = new Date().getFullYear()
   const quantidadeAnos = 10
   const year = [anoAtual]
@@ -139,19 +133,20 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
   async function createPayment(data: any) {
     await api
       .post('/payments', data)
-      .then((body) => {
-        return body.data.data
+      .then(() => {
+        toast.success('Pagamento realizado com sucesso', {
+          position: toast.POSITION.TOP_CENTER,
+          theme: 'colored',
+          onClose: () => {
+            removeAllItemsCart()
+            handleClose()
+          },
+        })
       })
-      .catch((error) =>
-        console.log(`Erro ao enviar o pagamento: ${error.message}`),
-      )
+      .catch((error) => returnError(error))
   }
 
   function handlePay(data: DataForm) {
-    console.log(data.quota)
-    console.log(totalPriceWithParc)
-    console.log(Number(data.quota))
-    console.log(totalPriceWithParc * Number(data.quota))
     const dataFormatted = {
       billingType: 'CREDIT_CARD',
       creditCard: {
@@ -183,259 +178,284 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
   }
 
   return (
-    <ModalOverlay>
-      <ModalContentWrapper>
-        <form action="submit" onSubmit={handleSubmit(handlePay)}>
-          <ModalHeader>
-            <ModalTitle>
-              <p>Preencha os dados para realizar o pagamento</p>
-              <span>* Todos os campos são obrigatórios</span>
-            </ModalTitle>
-            <CloseButton type="button">
-              <X size={25} />
-            </CloseButton>
-          </ModalHeader>
-          <ModalBody>
-            <ContainerTitleForm>
-              <TitleForm>Dados do Titular do Cartão</TitleForm>
-            </ContainerTitleForm>
+    <>
+      <ToastContainer />
 
-            <BoxContainer>
-              <ContainerSeparatorInputs>
-                <label htmlFor="name">Nome do titular do cartão</label>
-                <input
-                  type="text"
-                  id="name"
-                  minLength={2}
-                  placeholder="Nome do titular do cartão"
-                  required
-                  {...register('name')}
-                />
-              </ContainerSeparatorInputs>
-              <ContainerSeparatorInputs>
-                <label htmlFor="email">E-mail do titular do cartão</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="Informe seu e-mail"
-                  required
-                  {...register('email')}
-                />
-              </ContainerSeparatorInputs>
-              <SeparatorInputs>
-                <ContainerSeparatorInputs>
-                  <label htmlFor="cpf">CPF do titular do cartão</label>
-                  <Controller
-                    name="cpfCnpj"
-                    control={control}
-                    render={({ field: { value, ref } }) => (
-                      <input
-                        type="text"
-                        id="cpfCnpj"
-                        onChange={(e) => handleChange(e)}
-                        value={value}
-                        ref={ref}
-                        maxLength={14}
-                        placeholder="XXX.XXX.XXX-XX"
-                        required
-                      />
-                    )}
-                  />
-                </ContainerSeparatorInputs>
-                <ContainerSeparatorInputs>
-                  <label htmlFor="telefone">
-                    Telefone do titular do cartão
-                  </label>
-                  <Controller
-                    name="phone"
-                    control={control}
-                    render={({ field: { value, ref } }) => (
-                      <input
-                        type="text"
-                        id="phone"
-                        onChange={(e) => handleChangePhone(e)}
-                        value={value}
-                        ref={ref}
-                        maxLength={15}
-                        placeholder="(XX) XXXX-XXXX"
-                        required
-                      />
-                    )}
-                  />
-                </ContainerSeparatorInputs>
-              </SeparatorInputs>
+      <ModalOverlay>
+        <ModalContentWrapper>
+          <form action="submit" onSubmit={handleSubmit(handlePay)}>
+            <ModalHeader>
+              <ModalTitle>
+                <p>Preencha os dados para realizar o pagamento</p>
+                <span>* Todos os campos são obrigatórios</span>
+              </ModalTitle>
+              <CloseButton type="button" onClick={() => handleClose()}>
+                <X size={25} />
+              </CloseButton>
+            </ModalHeader>
+            <ModalBody>
               <ContainerTitleForm>
-                <TitleForm>Endereço do Titular do Cartão</TitleForm>
+                <TitleForm>Dados do Titular do Cartão</TitleForm>
               </ContainerTitleForm>
 
               <BoxContainer>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="name">Nome do titular do cartão</label>
+                  <input
+                    type="text"
+                    id="name"
+                    minLength={2}
+                    maxLength={50}
+                    placeholder="Nome do titular do cartão"
+                    required
+                    {...register('name')}
+                  />
+                </ContainerSeparatorInputs>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="email">E-mail do titular do cartão</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Informe seu e-mail"
+                    required
+                    minLength={2}
+                    maxLength={50}
+                    {...register('email')}
+                  />
+                </ContainerSeparatorInputs>
                 <SeparatorInputs>
                   <ContainerSeparatorInputs>
-                    <label htmlFor="postalCode">CEP do titular do cartão</label>
+                    <label htmlFor="cpf">CPF do titular do cartão</label>
                     <Controller
-                      name="postalCode"
+                      name="cpfCnpj"
                       control={control}
                       render={({ field: { value, ref } }) => (
                         <input
                           type="text"
-                          id="postalCode"
-                          onChange={(e) => handleChangeCEP(e)}
+                          id="cpfCnpj"
+                          onChange={(e) => handleChange(e)}
                           value={value}
                           ref={ref}
-                          maxLength={8}
-                          placeholder="XXXXX-XX"
+                          minLength={14}
+                          maxLength={14}
+                          placeholder="XXX.XXX.XXX-XX"
                           required
                         />
                       )}
                     />
                   </ContainerSeparatorInputs>
                   <ContainerSeparatorInputs>
-                    <label htmlFor="addressNumber">Número da residencia </label>
-                    <input
-                      type="number"
-                      min={0}
-                      id="addressNumber"
-                      placeholder="Número da residência"
-                      required
-                      {...register('addressNumber')}
+                    <label htmlFor="telefone">
+                      Telefone do titular do cartão
+                    </label>
+                    <Controller
+                      name="phone"
+                      control={control}
+                      render={({ field: { value, ref } }) => (
+                        <input
+                          type="text"
+                          id="phone"
+                          onChange={(e) => handleChangePhone(e)}
+                          value={value}
+                          ref={ref}
+                          maxLength={15}
+                          minLength={15}
+                          placeholder="(XX) XXXX-XXXX"
+                          required
+                        />
+                      )}
                     />
                   </ContainerSeparatorInputs>
                 </SeparatorInputs>
+                <ContainerTitleForm>
+                  <TitleForm>Endereço do Titular do Cartão</TitleForm>
+                </ContainerTitleForm>
+
+                <BoxContainer>
+                  <SeparatorInputs>
+                    <ContainerSeparatorInputs>
+                      <label htmlFor="postalCode">
+                        CEP do titular do cartão
+                      </label>
+                      <Controller
+                        name="postalCode"
+                        control={control}
+                        render={({ field: { value, ref } }) => (
+                          <input
+                            type="text"
+                            id="postalCode"
+                            onChange={(e) => handleChangeCEP(e)}
+                            value={value}
+                            ref={ref}
+                            minLength={8}
+                            maxLength={8}
+                            placeholder="XXXXX-XX"
+                            required
+                          />
+                        )}
+                      />
+                    </ContainerSeparatorInputs>
+                    <ContainerSeparatorInputs>
+                      <label htmlFor="addressNumber">
+                        Número da residencia{' '}
+                      </label>
+                      <input
+                        type="number"
+                        minLength={1}
+                        maxLength={6}
+                        id="addressNumber"
+                        placeholder="Número da residência"
+                        required
+                        {...register('addressNumber')}
+                      />
+                    </ContainerSeparatorInputs>
+                  </SeparatorInputs>
+                </BoxContainer>
               </BoxContainer>
-            </BoxContainer>
-            <ContainerTitleForm>
-              <TitleForm>Dados do Cartão</TitleForm>
-            </ContainerTitleForm>
-            <BoxContainer>
-              <ContainerSeparatorInputs>
-                <label htmlFor="name">Número do cartão</label>
-
-                <Controller
-                  name="numberCreditCard"
-                  control={control}
-                  render={({ field: { value, ref } }) => (
-                    <input
-                      type="text"
-                      id="numberCreditCard"
-                      onChange={(e) => handleChangeNumberCreditCard(e)}
-                      value={value}
-                      ref={ref}
-                      maxLength={19}
-                      placeholder="Número do cartão"
-                      required
-                    />
-                  )}
-                />
-              </ContainerSeparatorInputs>
-
-              <ContainerSeparatorInputs>
-                <label htmlFor="name">Nome impresso no cartão</label>
-                <input
-                  type="text"
-                  id="holderName"
-                  minLength={2}
-                  placeholder="Nome impresso no cartão"
-                  required
-                  {...register('holderName')}
-                />
-              </ContainerSeparatorInputs>
-              <SeparatorInputs>
+              <ContainerTitleForm>
+                <TitleForm>Dados do Cartão</TitleForm>
+              </ContainerTitleForm>
+              <BoxContainer>
                 <ContainerSeparatorInputs>
-                  <label htmlFor="expiryMonth">Mês de expiração</label>
+                  <label htmlFor="name">Número do cartão</label>
 
-                  <select
-                    id="expiryMonth"
-                    required
-                    {...register('expiryMonth')}
-                  >
-                    {months.map((n) => (
-                      <option key={n} value={n}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
-                </ContainerSeparatorInputs>
-                <ContainerSeparatorInputs>
-                  <label htmlFor="expiryYear">Ano de expiração</label>
-
-                  <select id="expiryYear" required {...register('expiryYear')}>
-                    {year.map((n) => (
-                      <option key={n} value={n}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
-                </ContainerSeparatorInputs>
-                <ContainerSeparatorInputs>
-                  <label htmlFor="ccv">Código de segurança</label>
-                  <input
-                    type="number"
-                    id="ccv"
-                    min={0}
-                    placeholder="ccv"
-                    required
-                    {...register('ccv')}
+                  <Controller
+                    name="numberCreditCard"
+                    control={control}
+                    render={({ field: { value, ref } }) => (
+                      <input
+                        type="text"
+                        id="numberCreditCard"
+                        onChange={(e) => handleChangeNumberCreditCard(e)}
+                        value={value}
+                        ref={ref}
+                        minLength={19}
+                        maxLength={23}
+                        placeholder="Número do cartão"
+                        required
+                      />
+                    )}
                   />
                 </ContainerSeparatorInputs>
-              </SeparatorInputs>
-              <ContainerSeparatorInputs>
-                <label htmlFor="quota">Modo de Parcelamento</label>
-                <Controller
-                  name="quota"
-                  control={control}
-                  render={({ field: { value, ref } }) => (
+
+                <ContainerSeparatorInputs>
+                  <label htmlFor="name">Nome impresso no cartão</label>
+                  <input
+                    type="text"
+                    id="holderName"
+                    minLength={2}
+                    maxLength={50}
+                    placeholder="Nome impresso no cartão"
+                    required
+                    {...register('holderName')}
+                  />
+                </ContainerSeparatorInputs>
+                <SeparatorInputs>
+                  <ContainerSeparatorInputs>
+                    <label htmlFor="expiryMonth">Mês de expiração</label>
+
                     <select
-                      id="quota"
-                      {...register('quota')}
-                      value={value}
+                      id="expiryMonth"
                       required
-                      ref={ref}
-                      onChange={(e) => handleChangeQuota(e)}
+                      {...register('expiryMonth')}
                     >
-                      {quotas.map((option) => (
-                        <option key={option} value={option}>
-                          {`${option} parcela${
-                            option > 1 ? `s` : ``
-                          } de ${calculeValue(option).toLocaleString('pt-br', {
-                            style: 'currency',
-                            currency: 'BRL',
-                          })}
-                     ${option === 1 ? `sem` : `com`} juros
-                      `}
+                      {months.map((n) => (
+                        <option key={n} value={n}>
+                          {n}
                         </option>
                       ))}
                     </select>
-                  )}
-                />
-              </ContainerSeparatorInputs>
-            </BoxContainer>
-          </ModalBody>
+                  </ContainerSeparatorInputs>
+                  <ContainerSeparatorInputs>
+                    <label htmlFor="expiryYear">Ano de expiração</label>
 
-          <DivPrice>
-            <p>
-              Subtotal:{' '}
-              {(totalPrice / 100).toLocaleString('pt-br', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
-            </p>
-            <h4>
-              {'Total: '}
-              {totalPriceWithParc.toLocaleString('pt-br', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
-            </h4>
-          </DivPrice>
+                    <select
+                      id="expiryYear"
+                      required
+                      {...register('expiryYear')}
+                    >
+                      {year.map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                  </ContainerSeparatorInputs>
+                  <ContainerSeparatorInputs>
+                    <label htmlFor="ccv">Código de segurança</label>
+                    <input
+                      type="number"
+                      id="ccv"
+                      minLength={3}
+                      maxLength={4}
+                      placeholder="ccv"
+                      required
+                      {...register('ccv')}
+                    />
+                  </ContainerSeparatorInputs>
+                </SeparatorInputs>
+                <ContainerSeparatorInputs>
+                  <label htmlFor="quota">Modo de Parcelamento</label>
+                  <Controller
+                    name="quota"
+                    control={control}
+                    render={({ field: { value, ref } }) => (
+                      <select
+                        id="quota"
+                        {...register('quota')}
+                        value={value}
+                        required
+                        ref={ref}
+                        onChange={(e) => handleChangeQuota(e)}
+                      >
+                        {quotas.map((option) => (
+                          <option key={option} value={option}>
+                            {`${option} parcela${
+                              option > 1 ? `s` : ``
+                            } de ${calculeValue(option).toLocaleString(
+                              'pt-br',
+                              {
+                                style: 'currency',
+                                currency: 'BRL',
+                              },
+                            )}
+                     ${option === 1 ? `sem` : `com`} juros
+                      `}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                </ContainerSeparatorInputs>
+              </BoxContainer>
+            </ModalBody>
 
-          <ModalFooter>
-            <CancelButton type="button" onClick={() => handleClose()}>
-              Voltar
-            </CancelButton>
-            <PaymentButton type="submit">Realizar o pagamento</PaymentButton>
-          </ModalFooter>
-        </form>
-      </ModalContentWrapper>
-    </ModalOverlay>
+            <DivPrice>
+              <p>
+                Subtotal:{' '}
+                {(totalPrice / 100).toLocaleString('pt-br', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+              </p>
+              <h4>
+                {'Total: '}
+                {totalPriceWithParc.toLocaleString('pt-br', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+              </h4>
+            </DivPrice>
+
+            <ModalFooter>
+              <CancelButton type="button" onClick={() => handleClose()}>
+                Voltar
+              </CancelButton>
+              <PaymentButton type="submit">Realizar o pagamento</PaymentButton>
+            </ModalFooter>
+          </form>
+        </ModalContentWrapper>
+      </ModalOverlay>
+    </>
   )
 }

@@ -30,8 +30,11 @@ export function Cart() {
   const [isOptionsPaymentModalOpen, setIsOptionsPaymentModalOpen] =
     useState(false)
   const handleCheckout = () => {
-    console.log(isOptionsPaymentModalOpen)
-    setIsOptionsPaymentModalOpen(true)
+    if (totalItens > 0) {
+      setIsOptionsPaymentModalOpen(true)
+    } else {
+      setIsOptionsPaymentModalOpen(false)
+    }
   }
 
   const handleCloseOptionsPaymentModal = () => {
