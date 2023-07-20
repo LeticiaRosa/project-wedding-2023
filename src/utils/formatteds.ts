@@ -59,3 +59,20 @@ export const formatCreditCardNumber = (creditCardNumber: string) => {
 
   return formattedNumber.trim() // Remove espaços extras no início ou final
 }
+
+export function adicionarDiasUteis(dataAtual: Date, diasUteis: number) {
+  const milissegundosPorDia = 24 * 60 * 60 * 1000
+  let diasAdicionados = 0
+
+  while (diasAdicionados < diasUteis) {
+    dataAtual.setTime(dataAtual.getTime() + milissegundosPorDia)
+    const diaDaSemana = dataAtual.getDay()
+
+    // Verificar se é sábado (dia 6) ou domingo (dia 0)
+    if (diaDaSemana !== 0 && diaDaSemana !== 6) {
+      diasAdicionados++
+    }
+  }
+
+  return dataAtual
+}

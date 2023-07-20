@@ -1,4 +1,6 @@
 import { StyleSheetManager } from 'styled-components'
+// import { saveAs } from 'file-saver'
+
 import {
   ModalOverlay,
   ModalContentWrapper,
@@ -18,10 +20,14 @@ import { X } from 'phosphor-react'
 import { useCart } from '../../contexts/contexts'
 import { Controller, useForm } from 'react-hook-form'
 import { ChangeEvent, useState } from 'react'
-import { formatCPF, formatPhone } from '../../utils/formatteds'
+import {
+  adicionarDiasUteis,
+  formatCPF,
+  formatPhone,
+} from '../../utils/formatteds'
 import { api } from '../../services/apiAssas'
 import { FormCreditCard } from './components/FormCreditCard'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { returnError } from '../../utils/response_api'
 
@@ -38,6 +44,7 @@ interface DataForm {
   quota: string
 }
 export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
+  const { totalPrice, removeAllItemsCart, totalItens } = useCart()
   const [isOpenStep, setIsOpenStep] = useState(false)
   const [clientId, setClientId] = useState('')
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
@@ -48,7 +55,6 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
       phone: '',
     },
   })
-  const { totalPrice, totalItens } = useCart()
 
   async function createClient(data: any) {
     const idCustomer = await listClient(data.cpfCnpj)
@@ -85,12 +91,46 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     onClose()
   }
 
+  async function createBoleto(data: any) {
+    try {
+      const response = await api.post('/payments', data).then((response) => {
+        toast.success('Boleto Criado! Verifique seus downloads.', {
+          position: toast.POSITION.TOP_CENTER,
+          theme: 'colored',
+          onClose: () => {
+            removeAllItemsCart()
+            handleClose()
+          },
+        })
+        return response.data.bankSlipUrl
+      })
+
+      return response
+    } catch (error: any) {
+      returnError(error)
+      return null
+    }
+  }
+
   async function handleGo(data: DataForm) {
     createClient({ name: data.name, cpfCnpj: data.cpf })
     const idCustomer = await listClient(data.cpf)
     setClientId(idCustomer)
-    if (idCustomer.length > 0) {
+    if (idCustomer.length > 0 && typeModal === 'Credito') {
       setIsOpenStep(true)
+    }
+    if (idCustomer.length > 0 && typeModal === 'Boleto') {
+      const dataAtual = new Date()
+      const urlBoleto = await createBoleto({
+        billingType: 'BOLETO',
+        customer: idCustomer,
+        value: totalPrice / 100,
+        dueDate: adicionarDiasUteis(dataAtual, 3),
+      })
+      console.log(urlBoleto)
+      if (urlBoleto) {
+        window.open(urlBoleto, '_blank')
+      }
     }
   }
 
