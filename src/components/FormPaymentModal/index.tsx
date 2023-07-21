@@ -30,12 +30,9 @@ import { FormCreditCard } from './components/FormCreditCard'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { returnError } from '../../utils/response_api'
+import { FormPix } from './components/FormPix'
+import { useModel } from '../../contexts/contextModal'
 
-interface modalProps {
-  isOpen: boolean
-  onClose: () => void
-  typeModal: string
-}
 interface DataForm {
   name: string
   email: string
@@ -43,9 +40,16 @@ interface DataForm {
   phone: string
   quota: string
 }
-export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
-  const { totalPrice, removeAllItemsCart, totalItens } = useCart()
-  const [isOpenStep, setIsOpenStep] = useState(false)
+export function FormPaymentModal() {
+  const { totalPrice, removeAllItemsCart } = useCart()
+  const {
+    handleModalPayment,
+    handleModalData,
+    closeAllModals,
+    modalType,
+    modalData,
+    modalPayment,
+  } = useModel()
   const [clientId, setClientId] = useState('')
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
     defaultValues: {
@@ -87,10 +91,6 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     }
   }
 
-  function handleClose() {
-    onClose()
-  }
-
   async function createBoleto(data: any) {
     try {
       const response = await api.post('/payments', data).then((response) => {
@@ -99,7 +99,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
           theme: 'colored',
           onClose: () => {
             removeAllItemsCart()
-            handleClose()
+            closeAllModals()
           },
         })
         return response.data.bankSlipUrl
@@ -112,14 +112,42 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
     }
   }
 
-  async function handleGo(data: DataForm) {
-    createClient({ name: data.name, cpfCnpj: data.cpf })
-    const idCustomer = await listClient(data.cpf)
-    setClientId(idCustomer)
-    if (idCustomer.length > 0 && typeModal === 'Credito') {
-      setIsOpenStep(true)
+  async function listKeys() {
+    try {
+      const response = await api
+        .get(`/addressKeys?status=ACTIVE`)
+        .then((body) => {
+          return body.data
+        })
+      if (response.length > 0) {
+        return response[0].id
+      }
+      return []
+    } catch (error: any) {
+      returnError(error)
+      return []
     }
-    if (idCustomer.length > 0 && typeModal === 'Boleto') {
+  }
+
+  async function createKey() {
+    try {
+      const response = await api
+        .post('/addressKeys', { type: 'EVP' })
+        .then((response) => {
+          return response.data.id
+        })
+      return response
+    } catch (error: any) {
+      returnError(error)
+      return null
+    }
+  }
+
+  async function openOptions(idCustomer: string) {
+    if (idCustomer.length > 0 && modalType === 'Credito') {
+      handleModalPayment()
+    }
+    if (idCustomer.length > 0 && modalType === 'Boleto') {
       const dataAtual = new Date()
       const urlBoleto = await createBoleto({
         billingType: 'BOLETO',
@@ -127,11 +155,24 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
         value: totalPrice / 100,
         dueDate: adicionarDiasUteis(dataAtual, 3),
       })
-      console.log(urlBoleto)
       if (urlBoleto) {
         window.open(urlBoleto, '_blank')
       }
     }
+    if (idCustomer.length > 0 && modalType === 'Pix') {
+      const keyData = await listKeys()
+      if (keyData.length <= 0) {
+        const key = await createKey()
+        console.log(key)
+      }
+    }
+  }
+
+  async function handleGo(data: DataForm) {
+    createClient({ name: data.name, cpfCnpj: data.cpf })
+    const idCustomer = await listClient(data.cpf)
+    setClientId(idCustomer)
+    openOptions(idCustomer)
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -147,12 +188,11 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
   }
 
   return (
-    isOpen &&
-    totalItens > 0 && (
+    modalData && (
       <>
         <ToastContainer />
         <StyleSheetManager shouldForwardProp={isValidProp}>
-          <ModalOverlay onClick={() => handleClose()}>
+          <ModalOverlay onClick={() => handleModalData()}>
             <ModalContentWrapper onClick={(e: any) => e.stopPropagation()}>
               <form action="submit" onSubmit={handleSubmit(handleGo)}>
                 <ModalHeader>
@@ -162,7 +202,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
                       Campos com asterisco (*) são de preenchimento obrigatório.
                     </span>
                   </ModalTitle>
-                  <CloseButton type="button" onClick={() => handleClose()}>
+                  <CloseButton type="button" onClick={() => handleModalData()}>
                     <X size={25} />
                   </CloseButton>
                 </ModalHeader>
@@ -247,7 +287,7 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
                 </DivPrice>
 
                 <ModalFooter>
-                  <CancelButton onClick={() => handleClose()} type="button">
+                  <CancelButton onClick={() => handleModalData()} type="button">
                     Voltar
                   </CancelButton>
                   <PaymentButton type="submit">Avançar</PaymentButton>
@@ -255,12 +295,10 @@ export function FormPaymentModal({ isOpen, onClose, typeModal }: modalProps) {
               </form>
             </ModalContentWrapper>
           </ModalOverlay>
-          {isOpenStep && typeModal === 'Credito' && (
-            <FormCreditCard
-              clientId={clientId}
-              onCloseStep={() => setIsOpenStep(false)}
-            />
+          {modalPayment && modalType === 'Credito' && (
+            <FormCreditCard clientId={clientId} />
           )}
+          {modalPayment && modalType === 'Pix' && <FormPix />}
         </StyleSheetManager>
       </>
     )

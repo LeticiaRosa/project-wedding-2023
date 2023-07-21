@@ -15,49 +15,25 @@ import { ReactComponent as Boleto } from '../../assets/boleto.svg'
 import { ReactComponent as Cart } from '../../assets/cart.svg'
 import { X } from 'phosphor-react'
 import { FormPaymentModal } from '../FormPaymentModal'
-import { useState } from 'react'
-import { useCart } from '../../contexts/contexts'
-interface modalProps {
-  isOptionsPaymentModalOpen: boolean
-  onOptionsPaymentModalClose: () => void
-}
+import { optionsPayment, useModel } from '../../contexts/contextModal'
 
-export function OptionsPaymentModal({
-  isOptionsPaymentModalOpen,
-  onOptionsPaymentModalClose,
-}: modalProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [typeModal, setTypeModal] = useState('')
-  const { totalItens } = useCart()
+export function OptionsPaymentModal() {
+  const { handleModalOptions, handleModalData, handleModalType, modalOptions } =
+    useModel()
 
-  const handleCloseModal = () => {
-    onOptionsPaymentModalClose()
-  }
-
-  const handleCloseModalForm = () => {
-    setIsModalOpen(false)
-  }
-
-  function openFormPaymentModal(option: string) {
-    if (totalItens > 0) {
-      setIsModalOpen(true)
-      setTypeModal(option)
-    } else {
-      setIsModalOpen(false)
-    }
-  }
-  if (!isOptionsPaymentModalOpen) {
-    return null
+  function openFormPaymentModal(option: optionsPayment) {
+    handleModalType(option)
+    handleModalData()
   }
 
   return (
-    totalItens > 0 && (
+    modalOptions && (
       <StyleSheetManager shouldForwardProp={isValidProp}>
-        <ModalOverlay onClick={onOptionsPaymentModalClose}>
+        <ModalOverlay onClick={() => handleModalOptions()}>
           <ModalContentWrapper onClick={(e: any) => e.stopPropagation()}>
             <ModalHeader>
               <ModalTitle>Selecione como deseja pagar</ModalTitle>
-              <CloseButton onClick={handleCloseModal}>
+              <CloseButton onClick={() => handleModalOptions()}>
                 <X size={25} />
               </CloseButton>
             </ModalHeader>
@@ -90,11 +66,7 @@ export function OptionsPaymentModal({
           </ModalContentWrapper>
         </ModalOverlay>
 
-        <FormPaymentModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModalForm}
-          typeModal={typeModal}
-        />
+        <FormPaymentModal />
       </StyleSheetManager>
     )
   )

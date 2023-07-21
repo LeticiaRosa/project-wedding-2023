@@ -4,20 +4,23 @@ import { ContainerMain, Container } from './defaultLayout'
 import { Footer } from '../components/Footer'
 import { Cart } from '../components/Cart'
 import { CartContextProvider } from '../contexts/contexts'
+import { ContextModalProvider } from '../contexts/contextModal'
 
 export function DefaultLayout() {
   return (
     <>
       <ContainerMain>
         <CartContextProvider>
-          <>
-            <Header />
-            <Container>
-              <Outlet />
-            </Container>
-            <Cart />
-            <Footer />
-          </>
+          <ContextModalProvider>
+            <>
+              <Header />
+              <Container>
+                <Outlet />
+              </Container>
+              <Cart />
+              <Footer />
+            </>
+          </ContextModalProvider>
           <ScrollRestoration />
         </CartContextProvider>
       </ContainerMain>

@@ -28,6 +28,7 @@ import {
 import { api } from '../../../../services/apiAssas'
 import { ToastContainer, toast } from 'react-toastify'
 import { returnError } from '../../../../utils/response_api'
+import { useModel } from '../../../../contexts/contextModal'
 interface DataForm {
   quota: string
   name: string
@@ -44,12 +45,12 @@ interface DataForm {
   priceTotalWithParce: number
 }
 interface modalProps {
-  onCloseStep: () => void
   clientId: string
 }
 
-export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
+export function FormCreditCard({ clientId }: modalProps) {
   const { totalPrice, removeAllItemsCart } = useCart()
+  const { handleModalPayment, closeAllModals } = useModel()
   const [totalPriceWithParc, setTotalPriceWithParc] = useState(totalPrice / 100)
   const { register, control, setValue, handleSubmit } = useForm<DataForm>({
     defaultValues: {
@@ -84,10 +85,6 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
     setValue('quota', value)
     const totalPrice = calculeValue(Number(value)) * Number(value)
     setTotalPriceWithParc(totalPrice)
-  }
-
-  function handleClose() {
-    onCloseStep()
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -139,7 +136,7 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
           theme: 'colored',
           onClose: () => {
             removeAllItemsCart()
-            handleClose()
+            closeAllModals()
           },
         })
       })
@@ -189,7 +186,7 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
                 <p>Preencha os dados para realizar o pagamento</p>
                 <span>* Todos os campos são obrigatórios</span>
               </ModalTitle>
-              <CloseButton type="button" onClick={() => handleClose()}>
+              <CloseButton type="button" onClick={() => handleModalPayment()}>
                 <X size={25} />
               </CloseButton>
             </ModalHeader>
@@ -448,7 +445,7 @@ export function FormCreditCard({ onCloseStep, clientId }: modalProps) {
             </DivPrice>
 
             <ModalFooter>
-              <CancelButton type="button" onClick={() => handleClose()}>
+              <CancelButton type="button" onClick={() => handleModalPayment()}>
                 Voltar
               </CancelButton>
               <PaymentButton type="submit">Realizar o pagamento</PaymentButton>

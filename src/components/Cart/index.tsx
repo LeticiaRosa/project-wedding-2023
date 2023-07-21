@@ -21,25 +21,14 @@ import isValidProp from '@emotion/is-prop-valid'
 import { StyleSheetManager } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { OptionsPaymentModal } from '../OptionsPaymentModal'
+import { useModel } from '../../contexts/contextModal'
 export function Cart() {
   const [isExpanded, setIsExpanded] = useState(true)
   const { removeItemCart, removeAllItemsCart, totalPrice, totalItens } =
     useCart()
   const navigation = useNavigate()
   const { state } = useCart()
-  const [isOptionsPaymentModalOpen, setIsOptionsPaymentModalOpen] =
-    useState(false)
-  const handleCheckout = () => {
-    if (totalItens > 0) {
-      setIsOptionsPaymentModalOpen(true)
-    } else {
-      setIsOptionsPaymentModalOpen(false)
-    }
-  }
-
-  const handleCloseOptionsPaymentModal = () => {
-    setIsOptionsPaymentModalOpen(false)
-  }
+  const { handleModalOptions } = useModel()
 
   function handleDeleteItemCart(id: number) {
     removeItemCart(id)
@@ -124,7 +113,7 @@ export function Cart() {
               disabled={totalItens <= 0}
               onClick={() => {
                 setIsExpanded((state) => !state)
-                handleCheckout()
+                handleModalOptions()
               }}
             >
               Concluir compra
@@ -133,10 +122,7 @@ export function Cart() {
               <span className="tooltip">Adicione itens ao carrinho</span>
             </Tooltip>
 
-            <OptionsPaymentModal
-              isOptionsPaymentModalOpen={isOptionsPaymentModalOpen}
-              onOptionsPaymentModalClose={handleCloseOptionsPaymentModal}
-            />
+            <OptionsPaymentModal />
 
             <BaseButton
               onClick={() => {

@@ -21,6 +21,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/payments/, ''),
       },
+      '/addressKeys': {
+        target: 'https://sandbox.asaas.com/api/v3/pix/addressKeys',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/addressKeys/, ''),
+      },
     },
   },
 
