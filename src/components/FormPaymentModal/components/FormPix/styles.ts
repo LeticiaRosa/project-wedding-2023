@@ -30,14 +30,15 @@ export const ModalHeader = styled.div`
 `
 
 export const ModalTitle = styled.div`
-  margin: 0;
-  font-weight: 600;
   p {
     font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
   }
   span {
-    font-size: 0.7rem;
+    font-size: 1rem;
     font-weight: 400;
+    padding: 2rem 0;
   }
 `
 
@@ -45,4 +46,49 @@ export const CloseButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+`
+export const ModalBody = styled.div`
+  padding: 0.5rem 0px 1rem 0;
+  span {
+    display: block;
+    padding: 0.4rem 0;
+    font-weight: 400;
+    font-size: 0.8rem;
+  }
+`
+export const ContainerSeparatorInputs = styled.div`
+  label {
+    width: 100%;
+    display: block;
+    font-weight: 600;
+  }
+  legend {
+    width: 100%;
+    padding-bottom: 1rem;
+  }
+  p {
+    font-size: 0.7rem;
+  }
+  input {
+    border: 1px solid ${(props) => props.theme.gray};
+    border-radius: 6px;
+    width: 100%;
+    height: 2rem;
+    margin: 0.5rem 0;
+    padding: 1.5rem 1rem;
+    transition: box-shadow 0.5s ease;
+    &:not(:disabled):hover {
+      box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
+    }
+  }
+`
+
+export const ImageWrapper = styled.div`
+  max-width: 200px;
+  margin: 0 auto;
+`
+
+export const Image = styled.img`
+  width: 100%;
+  height: auto;
 `

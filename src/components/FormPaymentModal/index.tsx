@@ -30,7 +30,7 @@ import { FormCreditCard } from './components/FormCreditCard'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { returnError } from '../../utils/response_api'
-import { FormPix } from './components/FormPix'
+import { FormPix, PropsDataPix } from './components/FormPix'
 import { useModel } from '../../contexts/contextModal'
 
 interface DataForm {
@@ -51,6 +51,7 @@ export function FormPaymentModal() {
     modalPayment,
   } = useModel()
   const [clientId, setClientId] = useState('')
+  const [dataPix, setDataPix] = useState<PropsDataPix>()
   const { register, handleSubmit, control, setValue } = useForm<DataForm>({
     defaultValues: {
       name: '',
@@ -112,12 +113,40 @@ export function FormPaymentModal() {
     }
   }
 
+  async function createPayPix(data: any) {
+    try {
+      const response = await api.post('/payments', data).then((response) => {
+        return response.data
+      })
+
+      return response
+    } catch (error: any) {
+      returnError(error)
+      return null
+    }
+  }
+
+  async function qrCodePix(id: string) {
+    try {
+      const response = await api
+        .get(`/payments/${id}/pixQrCode`)
+        .then((response) => {
+          return response.data
+        })
+
+      return response
+    } catch (error: any) {
+      returnError(error)
+      return null
+    }
+  }
+
   async function listKeys() {
     try {
       const response = await api
         .get(`/addressKeys?status=ACTIVE`)
         .then((body) => {
-          return body.data
+          return body.data.data
         })
       if (response.length > 0) {
         return response[0].id
@@ -160,10 +189,25 @@ export function FormPaymentModal() {
       }
     }
     if (idCustomer.length > 0 && modalType === 'Pix') {
-      const keyData = await listKeys()
+      let keyData = await listKeys()
       if (keyData.length <= 0) {
         const key = await createKey()
-        console.log(key)
+        console.log('Criou nova chave' || key)
+        keyData = key
+      }
+      console.log(keyData)
+      const dataAtual = new Date()
+      const id = await createPayPix({
+        billingType: 'PIX',
+        customer: idCustomer,
+        value: totalPrice / 100,
+        dueDate: adicionarDiasUteis(dataAtual, 3),
+      })
+      const qrcode = await qrCodePix(id.id)
+      console.log(qrcode)
+      if (qrcode) {
+        setDataPix(qrcode)
+        handleModalPayment()
       }
     }
   }
@@ -298,7 +342,7 @@ export function FormPaymentModal() {
           {modalPayment && modalType === 'Credito' && (
             <FormCreditCard clientId={clientId} />
           )}
-          {modalPayment && modalType === 'Pix' && <FormPix />}
+          {modalPayment && modalType === 'Pix' && <FormPix dataPix={dataPix} />}
         </StyleSheetManager>
       </>
     )
