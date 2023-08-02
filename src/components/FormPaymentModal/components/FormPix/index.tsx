@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { useModel } from '../../../../contexts/contextModal'
 import {
   ModalOverlay,
@@ -8,9 +9,17 @@ import {
   ImageWrapper,
   Image,
   ModalBody,
-  ContainerSeparatorInputs,
+  CopyButton,
+  ContainerSeparatorInputCopy,
+  ContainerTitle,
+  ModalFooter,
+  CancelButton,
+  ContainerInfo,
+  DivPrice,
 } from './styles'
 import { X } from 'phosphor-react'
+import { ReactComponent as Pix } from '../../../../assets/pix.svg'
+import { useCart } from '../../../../contexts/contexts'
 
 export interface PropsDataPix {
   encodedImage: string
@@ -20,63 +29,95 @@ export interface PropsDataPix {
 }
 
 export function FormPix(dataPix: any) {
-  const { handleModalData } = useModel()
+  const inputRef = useRef<HTMLInputElement | null>(null) // Adicionando o tipo correto
+  const [isCopied, setIsCopied] = useState(false)
+  const { handleModalPayment } = useModel()
+  const { totalPrice } = useCart()
+  const handleCopyClick = () => {
+    if (inputRef.current) {
+      inputRef.current.select()
+      navigator.clipboard.writeText(inputRef.current.value)
+      setIsCopied(true)
+    }
+  }
   return (
     <>
       <ModalOverlay>
         <ModalContentWrapper>
           <ModalHeader>
             <ModalTitle>
-              <p>Dados do Pix</p>
-              <span>
-                Escaneie e pague o QR Code a seguir para efetuar a compra do seu
-                presente
-              </span>
+              <ContainerTitle>
+                <Pix />
+                <p>Dados do Pix</p>
+              </ContainerTitle>
             </ModalTitle>
-            <CloseButton type="button" onClick={() => handleModalData()}>
+            <CloseButton type="button" onClick={() => handleModalPayment()}>
               <X size={25} />
             </CloseButton>
           </ModalHeader>
+
           <ModalBody>
+            <p>
+              Escaneie e pague o QR Code a seguir para efetuar a compra do seu
+              presente
+            </p>
             <span>
-              1. Acesse a opção Pix no seu Internet Banking ou app de
-              pagamentos;
+              <strong>1.</strong> Acesse a opção Pix no seu Internet Banking ou
+              app de pagamentos;
             </span>
             <span>
-              2. Escaneie o Qr Code a seguir ou copie o código de pagamento;
+              <strong>2.</strong> Escaneie o Qr Code a seguir ou copie o código
+              de pagamento;
             </span>
             <span>
-              3. Assim que recebermos o seu pagamento, você receberá uma
-              notificação no e-mail informado.
+              <strong>3.</strong> Assim que recebermos o seu pagamento, você
+              receberá uma notificação no e-mail informado.
             </span>
 
-            <ContainerSeparatorInputs>
-              <span>Efetue o pagamento até o dia 01/08/2023</span>
-              Valor: R$ 414,00
-              <ImageWrapper>
-                {dataPix.dataPix.encodedImage ? (
-                  <Image
-                    src={`data:image/jpeg;base64,${dataPix.dataPix.encodedImage}`}
-                    alt="Imagem da API"
-                  />
-                ) : (
-                  <p>Carregando...</p>
-                )}
-              </ImageWrapper>
-              <span>
-                {' '}
-                Se preferir, copie o código abaixo para realizar o pagamento.
-                <ContainerSeparatorInputs>
-                  <input
-                    type="text"
-                    id="pix"
-                    value={dataPix.dataPix.payload}
-                    disabled
-                  />
-                </ContainerSeparatorInputs>
-              </span>
-            </ContainerSeparatorInputs>
+            <ImageWrapper>
+              {dataPix.dataPix.encodedImage ? (
+                <Image
+                  src={`data:image/jpeg;base64,${dataPix.dataPix.encodedImage}`}
+                  alt="Imagem da API"
+                />
+              ) : (
+                <p>Carregando...</p>
+              )}
+              <ContainerInfo>
+                Efetue o pagamento até <span>01/08/2023</span>
+                <DivPrice>
+                  <p>Valor: </p>
+                  <h4>
+                    {(totalPrice / 100).toLocaleString('pt-br', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </h4>
+                </DivPrice>
+              </ContainerInfo>
+            </ImageWrapper>
+            <span>
+              Se preferir, copie o código abaixo para realizar o pagamento.
+            </span>
+            <ContainerSeparatorInputCopy>
+              <input
+                type="text"
+                id="pix"
+                value={dataPix.dataPix.payload}
+                disabled
+                ref={inputRef}
+              />
+
+              <CopyButton onClick={handleCopyClick}>
+                {isCopied ? 'Copiado! ' : 'Copiar '}
+              </CopyButton>
+            </ContainerSeparatorInputCopy>
           </ModalBody>
+          <ModalFooter>
+            <CancelButton type="button" onClick={() => handleModalPayment()}>
+              Voltar
+            </CancelButton>
+          </ModalFooter>
         </ModalContentWrapper>
       </ModalOverlay>
     </>

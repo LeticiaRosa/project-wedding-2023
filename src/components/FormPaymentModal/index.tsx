@@ -192,10 +192,8 @@ export function FormPaymentModal() {
       let keyData = await listKeys()
       if (keyData.length <= 0) {
         const key = await createKey()
-        console.log('Criou nova chave' || key)
         keyData = key
       }
-      console.log(keyData)
       const dataAtual = new Date()
       const id = await createPayPix({
         billingType: 'PIX',
@@ -204,7 +202,6 @@ export function FormPaymentModal() {
         dueDate: adicionarDiasUteis(dataAtual, 3),
       })
       const qrcode = await qrCodePix(id.id)
-      console.log(qrcode)
       if (qrcode) {
         setDataPix(qrcode)
         handleModalPayment()
