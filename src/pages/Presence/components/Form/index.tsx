@@ -1,58 +1,91 @@
-import { format } from 'date-fns'
+// import { format } from 'date-fns'
 import {
   ContainerForm,
   ContainerButton,
   TitleForm,
   ContainerSeparatorInputs,
   PresentButton,
+  SelectInput,
+  SelectContainer,
+  ListItem,
+  SelectList,
 } from './styles'
-import { useForm } from 'react-hook-form'
-import { Api } from '../../../../services/apiSheets'
-import { ToastContainer, toast } from 'react-toastify'
+import { Controller, useForm } from 'react-hook-form'
+import { StyleSheetManager } from 'styled-components'
+import isValidProp from '@emotion/is-prop-valid'
+
+// import { Api } from '../../../../services/apiSheets'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { GestOption, gestsList } from '../../../../constants/guestsList'
+import { useState } from 'react'
+import { InputPresence } from './InputPresence'
 
 interface DataForm {
   amountPeople: string
   isPresent: string
   mensage: string
-  name: string
+  optionSelect: { id: number; name: string; gests: number }
 }
 
 export function Form() {
-  const { register, handleSubmit, reset } = useForm<DataForm>({
-    defaultValues: {
-      amountPeople: '',
-      isPresent: '',
-      mensage: '',
-      name: '',
-    },
-  })
-  const repeticoes = Array.from({ length: 8 }, (_, index) => index + 1)
+  const { register, handleSubmit, reset, control, setValue, getValues } =
+    useForm<DataForm>({
+      defaultValues: {
+        amountPeople: '',
+        isPresent: '',
+        mensage: '',
+        optionSelect: {},
+      },
+    })
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isVisible, setIsVisible] = useState(false)
+
+  const filteredOptions = gestsList.filter((option) =>
+    option.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
+
+  const handleSelect = (option: GestOption) => {
+    setSearchTerm(option.name)
+    setValue('optionSelect', {
+      id: option.id,
+      name: option.name,
+      gests: option.gests,
+    })
+    setIsVisible(false)
+  }
+
+  const handleInputChange = (value: string) => {
+    setSearchTerm(value)
+    setIsVisible(value.length > 0)
+  }
 
   async function handleSalveOnSheets(data: DataForm) {
-    const dataAtual = new Date()
-    const dataAtualFormatada = format(dataAtual, 'dd/MM/yyyy HH:mm:ss')
-    const dataFormatted = {
-      NOME: data.name,
-      'VAI AO CASAMENTO?': data.isPresent,
-      TEXTO: data.mensage,
-      'QUANTIDADE DE PESSOAS': data.amountPeople,
-      'DATA DA CONFIRMAÇÃO': dataAtualFormatada,
-    }
+    console.log(data)
+    // const dataAtual = new Date()
+    // const dataAtualFormatada = format(dataAtual, 'dd/MM/yyyy HH:mm:ss')
+    // const dataFormatted = {
+    //   NOME: data.optionSelect.name,
+    //   'VAI AO CASAMENTO?': data.isPresent,
+    //   TEXTO: data.mensage,
+    //   'QUANTIDADE DE PESSOAS': data.amountPeople,
+    //   'DATA DA CONFIRMAÇÃO': dataAtualFormatada,
+    // }
 
-    await Api.post('', dataFormatted)
-      .then(() =>
-        toast.success('Presença Confirmada!', {
-          position: toast.POSITION.TOP_CENTER,
-          theme: 'colored',
-        }),
-      )
-      .catch((error) =>
-        toast.error(`Erro ao enviar o post: ${error.message}`, {
-          position: toast.POSITION.TOP_CENTER,
-          theme: 'colored',
-        }),
-      )
+    // await Api.post('', dataFormatted)
+    //   .then(() =>
+    //     toast.success('Presença Confirmada!', {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       theme: 'colored',
+    //     }),
+    //   )
+    //   .catch((error) =>
+    //     toast.error(`Erro ao enviar o post: ${error.message}`, {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       theme: 'colored',
+    //     }),
+    //   )
     reset()
   }
 
@@ -65,21 +98,59 @@ export function Form() {
         onSubmit={handleSubmit(handleSalveOnSheets)}
       >
         <TitleForm>Formulário de Confirmação de Presença</TitleForm>
-
         <ContainerSeparatorInputs>
           <label htmlFor="name">
-            Informe o seu nome ou da sua familia conforme escrito no convite:
+            Selecione o seu nome ou da sua familia conforme escrito no convite:
           </label>
-          <input
-            type="text"
-            id="name"
-            placeholder="Informe seu nome"
-            required
-            {...register('name')}
+
+          <Controller
+            name="optionSelect"
+            control={control}
+            render={({ field }) => (
+              <SelectInput
+                {...field}
+                type="text"
+                value={searchTerm}
+                onChange={(e: any) => {
+                  field.onChange(e)
+                  handleInputChange(e.target.value)
+                }}
+                placeholder="Digite para buscar"
+              />
+            )}
           />
+          <StyleSheetManager shouldForwardProp={isValidProp}>
+            <SelectContainer isVisible={isVisible}>
+              <SelectList>
+                {filteredOptions.map((option) => (
+                  <ListItem
+                    key={option.id}
+                    onClick={() => handleSelect(option)}
+                  >
+                    {option.name}
+                  </ListItem>
+                ))}
+              </SelectList>
+            </SelectContainer>
+          </StyleSheetManager>
         </ContainerSeparatorInputs>
 
-        <ContainerSeparatorInputs>
+        <div>
+          {getValues('optionSelect').id > 0 ? (
+            <div>
+              <legend>
+                Gentileza preencher os campos abaixo apenas com o nome dos
+                confirmados
+              </legend>
+              {Array.from({ length: getValues('optionSelect').gests }).map(
+                (_, index) => (
+                  <InputPresence key={index} />
+                ),
+              )}
+            </div>
+          ) : null}
+        </div>
+        {/* <ContainerSeparatorInputs>
           <legend>Podemos contar com a sua presença ? </legend>
 
           <label className="radio">
@@ -98,12 +169,11 @@ export function Form() {
             <span className="checkmark"></span>
             Não, infelizmente não poderei comparecer
           </label>
-        </ContainerSeparatorInputs>
-
+        </ContainerSeparatorInputs> */}
         <ContainerSeparatorInputs>
           <label htmlFor="mensage">
-            Caso sua resposta a pergunta acima seja NÃO, utilize o campo abaixo
-            para enviar uma mensagem aos noivos:
+            Se desejar, utilize o campo abaixo para enviar uma mensagem aos
+            noivos:
           </label>
           <h6>Assine com seu nome completo no final do texto</h6>
           <textarea
@@ -112,40 +182,6 @@ export function Form() {
             {...register('mensage')}
           ></textarea>
         </ContainerSeparatorInputs>
-
-        <ContainerSeparatorInputs>
-          <legend>Selecione a quantidade de confirmados:</legend>
-
-          {repeticoes.map((item) => {
-            if (item > 1) {
-              return (
-                <label className="radio" key={item}>
-                  <input
-                    type="radio"
-                    value={item}
-                    {...register('amountPeople')}
-                  />
-                  <span className="checkmark"></span>
-                  {item} pessoas (incluindo eu)
-                </label>
-              )
-            } else if (item === 1) {
-              return (
-                <label className="radio" key={item}>
-                  <input
-                    type="radio"
-                    value={item}
-                    {...register('amountPeople')}
-                  />
-                  <span className="checkmark"></span>
-                  {item} pessoa (somente eu)
-                </label>
-              )
-            }
-            return <></>
-          })}
-        </ContainerSeparatorInputs>
-
         <ContainerButton>
           <PresentButton type="submit">Confirmar presença</PresentButton>
         </ContainerButton>

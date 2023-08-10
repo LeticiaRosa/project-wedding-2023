@@ -1,4 +1,4 @@
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import { BaseButton } from '../../../../components/Cart/styles'
 
 export const ContainerForm = styled.form`
@@ -15,7 +15,7 @@ export const TitleForm = styled.h4`
 `
 
 export const ContainerSeparatorInputs = styled.div`
-  padding: 1rem;
+  padding: 1rem 0;
 
   label {
     width: 100%;
@@ -35,7 +35,7 @@ export const ContainerSeparatorInputs = styled.div`
     border-radius: 6px;
     width: 100%;
     height: 2rem;
-    margin: 1rem 0;
+    margin: 1rem 0 0 0;
     padding: 1.5rem;
     transition: box-shadow 0.5s ease;
     &:not(:disabled):hover {
@@ -103,5 +103,41 @@ export const PresentButton = styled(BaseButton)`
   background-color: ${(props) => props.theme['terra-600']};
   &:not(:disabled):hover {
     background-color: ${(props) => props.theme['terra-700']};
+  }
+`
+
+export const SelectContainer = styled.div<{ isVisible: boolean }>`
+  display: ${(props) => (props.isVisible ? 'block' : 'none')};
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  min-width: 300px;
+`
+
+export const SelectInput = styled.input`
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  ${SelectContainer} {
+    display: block;
+  }
+`
+
+export const SelectList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+`
+
+export const ListItem = styled.li`
+  padding: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
   }
 `
