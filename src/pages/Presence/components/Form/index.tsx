@@ -9,37 +9,43 @@ import {
   SelectContainer,
   ListItem,
   SelectList,
+  ContainerRadio,
 } from './styles'
+import { ChangeEvent, useState } from 'react'
+
 import { Controller, useForm } from 'react-hook-form'
 import { StyleSheetManager } from 'styled-components'
 import isValidProp from '@emotion/is-prop-valid'
 
-// import { Api } from '../../../../services/apiSheets'
-import { ToastContainer } from 'react-toastify'
+import { Api } from '../../../../services/apiSheets'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { GestOption, gestsList } from '../../../../constants/guestsList'
-import { useState } from 'react'
-import { InputPresence } from './InputPresence'
+import { format } from 'date-fns'
 
 interface DataForm {
-  amountPeople: string
-  isPresent: string
   mensage: string
   optionSelect: { id: number; name: string; gests: number }
+  confirmed: {
+    name: string
+    minor: 'S' | 'N'
+  }
 }
 
 export function Form() {
   const { register, handleSubmit, reset, control, setValue, getValues } =
     useForm<DataForm>({
       defaultValues: {
-        amountPeople: '',
-        isPresent: '',
         mensage: '',
         optionSelect: {},
+        confirmed: {},
       },
     })
 
   const [searchTerm, setSearchTerm] = useState('')
+  const [nameConfirmated, setNameConfirmated] = useState<string[]>([])
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]) // Estado para acompanhar as caixas de seleção selecionadas
+
   const [isVisible, setIsVisible] = useState(false)
 
   const filteredOptions = gestsList.filter((option) =>
@@ -61,31 +67,53 @@ export function Form() {
     setIsVisible(value.length > 0)
   }
 
-  async function handleSalveOnSheets(data: DataForm) {
-    console.log(data)
-    // const dataAtual = new Date()
-    // const dataAtualFormatada = format(dataAtual, 'dd/MM/yyyy HH:mm:ss')
-    // const dataFormatted = {
-    //   NOME: data.optionSelect.name,
-    //   'VAI AO CASAMENTO?': data.isPresent,
-    //   TEXTO: data.mensage,
-    //   'QUANTIDADE DE PESSOAS': data.amountPeople,
-    //   'DATA DA CONFIRMAÇÃO': dataAtualFormatada,
-    // }
+  const handleInputNamesChange = (
+    value: ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    setNameConfirmated((prevValues) => {
+      const newValues = [...prevValues]
+      newValues[index] = value.target.value
+      return newValues
+    })
+  }
 
-    // await Api.post('', dataFormatted)
-    //   .then(() =>
-    //     toast.success('Presença Confirmada!', {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       theme: 'colored',
-    //     }),
-    //   )
-    //   .catch((error) =>
-    //     toast.error(`Erro ao enviar o post: ${error.message}`, {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       theme: 'colored',
-    //     }),
-    //   )
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (selectedCheckboxes.includes(value)) {
+      setSelectedCheckboxes(selectedCheckboxes.filter((item) => item !== value)) // Desmarcar se já estiver marcado
+    } else {
+      setSelectedCheckboxes([...selectedCheckboxes, value]) // Marcar se ainda não estiver marcado
+    }
+  }
+  async function handleSalveOnSheets(data: DataForm) {
+    const names = nameConfirmated.map((name) => name || ' - ')
+    const dataAtual = new Date()
+    const dataAtualFormatada = format(dataAtual, 'dd/MM/yyyy HH:mm:ss')
+    const dataFormatted = {
+      'NOME FAMILIA': data.optionSelect.name,
+      'QUANTIDADE DE CONVIDADOS': data.optionSelect.gests,
+      'QUANTIDADE DE CONFIRMADOS': nameConfirmated.length,
+      'NOME DOS CONFIRMADOS': names,
+      'QUANTIDADE DE MENORES DE IDADE': selectedCheckboxes.length,
+      TEXTO: data.mensage,
+      'DATA DA CONFIRMAÇÃO': dataAtualFormatada,
+    }
+    console.log(dataFormatted)
+
+    await Api.post('', dataFormatted)
+      .then(() =>
+        toast.success('Presença Confirmada!', {
+          position: toast.POSITION.TOP_CENTER,
+          theme: 'colored',
+        }),
+      )
+      .catch((error) =>
+        toast.error(`Erro ao enviar o post: ${error.message}`, {
+          position: toast.POSITION.TOP_CENTER,
+          theme: 'colored',
+        }),
+      )
     reset()
   }
 
@@ -106,6 +134,9 @@ export function Form() {
           <Controller
             name="optionSelect"
             control={control}
+            rules={{
+              required: true,
+            }}
             render={({ field }) => (
               <SelectInput
                 {...field}
@@ -134,22 +165,47 @@ export function Form() {
             </SelectContainer>
           </StyleSheetManager>
         </ContainerSeparatorInputs>
-
-        <div>
-          {getValues('optionSelect').id > 0 ? (
-            <div>
-              <legend>
-                Gentileza preencher os campos abaixo apenas com o nome dos
-                confirmados
-              </legend>
-              {Array.from({ length: getValues('optionSelect').gests }).map(
-                (_, index) => (
-                  <InputPresence key={index} />
-                ),
-              )}
-            </div>
-          ) : null}
-        </div>
+        <ContainerSeparatorInputs>
+          <Controller
+            name="confirmed"
+            control={control}
+            render={() => {
+              return getValues('optionSelect').id > 0 ? (
+                <div>
+                  <legend>
+                    Gentileza preencher os campos abaixo apenas com o nome dos
+                    confirmados
+                  </legend>
+                  {Array.from({ length: getValues('optionSelect').gests }).map(
+                    (_, index) => (
+                      <ContainerRadio key={index}>
+                        <input
+                          type="text"
+                          name={`nameConfirmated[${index}]`}
+                          onChange={(e) => {
+                            handleInputNamesChange(e, index)
+                          }}
+                        />
+                        <input
+                          type="checkbox"
+                          value={`Option ${index}`}
+                          checked={selectedCheckboxes.includes(
+                            `Option ${index}`,
+                          )}
+                          onChange={handleCheckboxChange}
+                        />
+                        <span className="checkmark"></span>
+                        Menor de 8 anos
+                      </ContainerRadio>
+                    ),
+                  )}
+                </div>
+              ) : (
+                <div></div>
+              )
+            }}
+          />
+        </ContainerSeparatorInputs>
         {/* <ContainerSeparatorInputs>
           <legend>Podemos contar com a sua presença ? </legend>
 

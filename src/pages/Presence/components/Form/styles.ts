@@ -91,6 +91,12 @@ export const ContainerSeparatorInputs = styled.div`
     border-radius: 50%;
   }
 `
+export const ContainerRadio = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1rem;
+`
 
 export const ContainerButton = styled.div`
   display: flex;
