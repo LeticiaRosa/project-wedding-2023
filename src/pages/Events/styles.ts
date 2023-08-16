@@ -3,6 +3,7 @@ export const Container = styled.main`
   h1 {
     font-size: 3rem;
     padding: 0 0 2rem 0;
+    text-align: center;
   }
 
   iframe {
@@ -12,5 +13,12 @@ export const Container = styled.main`
   }
   p {
     padding: 0.5rem;
+    text-align: center;
+  }
+
+  @media (max-width: 800px) {
+    h1 {
+      font-size: 2rem;
+    }
   }
 `

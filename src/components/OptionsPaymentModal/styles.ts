@@ -79,6 +79,7 @@ export const OptionsButton = styled.button`
 export const ContainerTitleButton = styled.div`
   display: flex;
   align-items: start;
+  text-align: start;
   justify-content: center;
   flex-direction: column;
   width: 100%;

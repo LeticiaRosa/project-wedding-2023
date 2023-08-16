@@ -9,13 +9,16 @@ export const HeaderContainer = styled.header`
 
   img.imageBackgroung {
     width: 100%;
-    height: 400px;
+    max-height: 600px;
+    min-height: 400px;
     object-fit: cover;
-    object-position: 10% 40%;
+    object-position: 50% 50%;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;
   }
   img.imageSeparador {
-    width: 20%;
-    padding: 1rem;
+    width: 15rem;
+    padding-top: 1rem;
   }
 `
 export const MenuContainer = styled.div`
@@ -28,6 +31,7 @@ export const MenuContainer = styled.div`
   width: 100%;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 100;
+  padding: 0.5rem;
   div {
     display: flex;
     align-items: center;
@@ -41,7 +45,7 @@ export const MenuContainer = styled.div`
 
   nav {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     padding: 0.5rem;
 
     a {
@@ -51,6 +55,7 @@ export const MenuContainer = styled.div`
       text-decoration: none;
       font-weight: 500;
       box-shadow: none;
+      text-align: center;
 
       color: ${(props) => props.theme.black};
 
@@ -65,6 +70,17 @@ export const MenuContainer = styled.div`
         font-weight: 600;
         border-bottom: 2px solid ${(props) => props.theme['terra-500']};
       }
+    }
+  }
+  @media (max-width: 800px) {
+    h1 {
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+
+    nav {
+      gap: 0.97rem;
+      padding: 0.5rem 1rem;
     }
   }
 `

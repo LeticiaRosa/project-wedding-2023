@@ -52,5 +52,7 @@ export const GlobalStyle = createGlobalStyle`
   /* Estilos para navegadores Firefox */
   scrollbar-width: thin;
   scrollbar-color: ${(props) => props.theme.gray} transparent;
-    
+
+ 
+
 `

@@ -197,7 +197,7 @@ export function FormCreditCard({ clientId }: modalProps) {
 
               <BoxContainer>
                 <ContainerSeparatorInputs>
-                  <label htmlFor="name">Nome do titular do cartão</label>
+                  <label htmlFor="name">Nome do titular</label>
                   <input
                     type="text"
                     id="name"
@@ -209,7 +209,7 @@ export function FormCreditCard({ clientId }: modalProps) {
                   />
                 </ContainerSeparatorInputs>
                 <ContainerSeparatorInputs>
-                  <label htmlFor="email">E-mail do titular do cartão</label>
+                  <label htmlFor="email">E-mail do titular</label>
                   <input
                     type="email"
                     id="email"
@@ -222,7 +222,7 @@ export function FormCreditCard({ clientId }: modalProps) {
                 </ContainerSeparatorInputs>
                 <SeparatorInputs>
                   <ContainerSeparatorInputs>
-                    <label htmlFor="cpf">CPF do titular do cartão</label>
+                    <label htmlFor="cpf">CPF do titular</label>
                     <Controller
                       name="cpfCnpj"
                       control={control}
@@ -242,9 +242,7 @@ export function FormCreditCard({ clientId }: modalProps) {
                     />
                   </ContainerSeparatorInputs>
                   <ContainerSeparatorInputs>
-                    <label htmlFor="telefone">
-                      Telefone do titular do cartão
-                    </label>
+                    <label htmlFor="telefone">Telefone do titular</label>
                     <Controller
                       name="phone"
                       control={control}
@@ -265,15 +263,13 @@ export function FormCreditCard({ clientId }: modalProps) {
                   </ContainerSeparatorInputs>
                 </SeparatorInputs>
                 <ContainerTitleForm>
-                  <TitleForm>Endereço do Titular do Cartão</TitleForm>
+                  <TitleForm>Endereço do Titular</TitleForm>
                 </ContainerTitleForm>
 
                 <BoxContainer>
                   <SeparatorInputs>
                     <ContainerSeparatorInputs>
-                      <label htmlFor="postalCode">
-                        CEP do titular do cartão
-                      </label>
+                      <label htmlFor="postalCode">CEP do titular</label>
                       <Controller
                         name="postalCode"
                         control={control}
@@ -292,21 +288,68 @@ export function FormCreditCard({ clientId }: modalProps) {
                         )}
                       />
                     </ContainerSeparatorInputs>
+                  </SeparatorInputs>
+
+                  <ContainerSeparatorInputs>
+                    <label htmlFor="postalCode">Rua</label>
+                    <Controller
+                      name="postalCode"
+                      control={control}
+                      render={({ field: { value, ref } }) => (
+                        <input
+                          type="text"
+                          id="postalCode"
+                          onChange={(e) => handleChangeCEP(e)}
+                          value={value}
+                          ref={ref}
+                          minLength={8}
+                          maxLength={8}
+                          placeholder="Informe a rua"
+                          required
+                        />
+                      )}
+                    />
+                  </ContainerSeparatorInputs>
+
+                  <SeparatorInputs>
                     <ContainerSeparatorInputs>
-                      <label htmlFor="addressNumber">
-                        Número da residencia{' '}
-                      </label>
+                      <label htmlFor="addressNumber">Número</label>
                       <input
                         type="number"
                         minLength={1}
                         maxLength={6}
                         id="addressNumber"
-                        placeholder="Número da residência"
+                        placeholder="Número"
+                        required
+                        {...register('addressNumber')}
+                      />
+                    </ContainerSeparatorInputs>
+                    <ContainerSeparatorInputs>
+                      <label htmlFor="addressNumber">Bairro</label>
+                      <input
+                        type="number"
+                        minLength={1}
+                        maxLength={6}
+                        id="addressNumber"
+                        placeholder="Bairro"
                         required
                         {...register('addressNumber')}
                       />
                     </ContainerSeparatorInputs>
                   </SeparatorInputs>
+
+                  <ContainerSeparatorInputs>
+                    <label htmlFor="addressNumber">Complemento</label>
+                    <input
+                      type="number"
+                      minLength={1}
+                      maxLength={6}
+                      id="addressNumber"
+                      placeholder="Complemento"
+                      required
+                      {...register('addressNumber')}
+                    />
+                  </ContainerSeparatorInputs>
                 </BoxContainer>
               </BoxContainer>
               <ContainerTitleForm>

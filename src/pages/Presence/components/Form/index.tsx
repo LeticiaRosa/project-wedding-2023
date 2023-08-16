@@ -114,6 +114,7 @@ export function Form() {
           theme: 'colored',
         }),
       )
+    setSearchTerm('')
     reset()
   }
 
@@ -174,8 +175,9 @@ export function Form() {
                 <div>
                   <legend>
                     Gentileza preencher os campos abaixo apenas com o nome dos
-                    confirmados
+                    confirmados:
                   </legend>
+
                   {Array.from({ length: getValues('optionSelect').gests }).map(
                     (_, index) => (
                       <ContainerRadio key={index}>
@@ -206,26 +208,6 @@ export function Form() {
             }}
           />
         </ContainerSeparatorInputs>
-        {/* <ContainerSeparatorInputs>
-          <legend>Podemos contar com a sua presença ? </legend>
-
-          <label className="radio">
-            <input
-              type="radio"
-              value="Yes"
-              required
-              {...register('isPresent')}
-            />
-            <span className="checkmark"></span>
-            Sim, estarei presente no casamento
-          </label>
-
-          <label className="radio">
-            <input type="radio" value="No" {...register('isPresent')} />
-            <span className="checkmark"></span>
-            Não, infelizmente não poderei comparecer
-          </label>
-        </ContainerSeparatorInputs> */}
         <ContainerSeparatorInputs>
           <label htmlFor="mensage">
             Se desejar, utilize o campo abaixo para enviar uma mensagem aos

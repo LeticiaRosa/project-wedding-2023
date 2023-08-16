@@ -5,6 +5,13 @@ export const ContainerForm = styled.form`
   width: 80%;
   background-color: ${(props) => props.theme['terra-100']};
   padding: 2rem;
+  margin-top: 1rem;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    padding: 1rem 0 0 0;
+    margin-top: 1rem;
+  }
 `
 
 export const TitleForm = styled.h4`
@@ -12,6 +19,7 @@ export const TitleForm = styled.h4`
   align-items: center;
   justify-content: center;
   padding-bottom: 1rem;
+  text-align: center;
 `
 
 export const ContainerSeparatorInputs = styled.div`
@@ -55,19 +63,6 @@ export const ContainerSeparatorInputs = styled.div`
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
   }
-  .radio {
-    position: relative;
-    padding-left: 30px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  .radio input[type='radio'] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-  }
 
   .checkmark {
     position: absolute;
@@ -79,7 +74,7 @@ export const ContainerSeparatorInputs = styled.div`
     border-radius: 50%;
   }
 
-  .radio input[type='radio']:checked + .checkmark::after {
+  .checkmark::after {
     content: '';
     position: absolute;
     top: 50%;

@@ -84,7 +84,7 @@ export const ContainerSeparatorInputs = styled.div`
   }
 
   p {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     font-style: italic;
   }
 
@@ -106,6 +106,7 @@ export const ContainerSeparatorInputs = styled.div`
     border-radius: 6px;
     border: 1px solid ${(props) => props.theme.gray};
     gap: 0.5rem;
+    min-width: 85px;
     cursor: pointer;
     transition: box-shadow 0.5s ease;
     margin: 0.5rem 0;
@@ -120,6 +121,7 @@ export const SeparatorInputs = styled.div`
   font-size: 0.75rem;
   display: flex;
   justify-content: space-between;
+  gap: 0.5rem;
 `
 
 export const DivPrice = styled.div`

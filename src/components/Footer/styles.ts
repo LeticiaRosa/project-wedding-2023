@@ -6,9 +6,10 @@ export const FooterContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-bottom: 2rem;
 
   img.imageSeparador {
-    width: 20%;
+    width: 15rem;
     padding-bottom: 1rem;
   }
   h1 {

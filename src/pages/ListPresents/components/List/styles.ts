@@ -19,6 +19,13 @@ export const ContainerSort = styled.div`
     gap: 0.5rem;
     cursor: pointer;
   }
+  @media (max-width: 500px) {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 0;
+  }
 `
 export const ContainerList = styled.div`
   display: grid;
@@ -26,15 +33,15 @@ export const ContainerList = styled.div`
   grid-gap: 10px;
   max-width: 900px;
   min-height: 300px;
-
+  padding-bottom: 2rem;
   .item {
     text-align: center;
+    max-width: 200px;
     background-color: ${(props) => props.theme['terra-100']};
   }
 
   img {
-    width: 80%;
-    max-width: 150px;
+    width: 150px;
     height: auto;
     border-radius: 8px;
   }
@@ -43,7 +50,7 @@ export const ContainerList = styled.div`
     margin-top: 1rem;
     font-size: 1rem;
     display: inline-block;
-    width: 100%;
+    width: 80%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -72,7 +79,7 @@ export const ContainerList = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 300px) {
+  @media (max-width: 200px) {
     grid-template-columns: repeat(1, 1fr);
   }
 `
