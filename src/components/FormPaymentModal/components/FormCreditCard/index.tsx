@@ -27,8 +27,9 @@ import {
 } from '../../../../utils/formatteds'
 import { api } from '../../../../services/apiAssas'
 import { ToastContainer, toast } from 'react-toastify'
-import { returnError } from '../../../../utils/response_api'
+import { returnError } from '../../../../utils/responseApi'
 import { useModel } from '../../../../contexts/contextModal'
+import { apii } from '../../../../services/apiCep'
 interface DataForm {
   quota: string
   name: string
@@ -36,7 +37,10 @@ interface DataForm {
   cpfCnpj: string
   phone: string
   postalCode: string
+  road: string
   addressNumber: string
+  district: string
+  addressComplement: string
   holderName: string
   numberCreditCard: string
   expiryMonth: string
@@ -60,7 +64,10 @@ export function FormCreditCard({ clientId }: modalProps) {
       cpfCnpj: '',
       phone: '',
       postalCode: '',
+      road: '',
       addressNumber: '',
+      district: '',
+      addressComplement: '',
       holderName: '',
       numberCreditCard: '',
       expiryMonth: '01',
@@ -99,12 +106,37 @@ export function FormCreditCard({ clientId }: modalProps) {
     setValue('phone', formattedValue)
   }
 
-  const handleChangeCEP = (event: ChangeEvent<HTMLInputElement>) => {
+  const buscarEndereco = async (cep: string) => {
+    try {
+      const response = await apii.get(`/ws/${cep}/json/`).then((body) => {
+        return body.data
+      })
+      console.log(response.cep)
+      if (response.cep.length > 0) {
+        return response
+      }
+      return []
+    } catch (error: any) {
+      return []
+    }
+  }
+
+  const handleChangeCEP = async (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     const formattedValue = formatCEP(value)
     setValue('postalCode', formattedValue)
-  }
 
+    if (formattedValue.length > 8) {
+      const data = await buscarEndereco(formattedValue)
+      if (data) {
+        setValue('road', data.logradouro)
+        setValue('district', data.bairro)
+      } else {
+        setValue('road', '')
+        setValue('district', '')
+      }
+    }
+  }
   const handleChangeNumberCreditCard = (
     event: ChangeEvent<HTMLInputElement>,
   ) => {
@@ -159,6 +191,7 @@ export function FormCreditCard({ clientId }: modalProps) {
         cpfCnpj: data.cpfCnpj.replace(/[.-]/g, ''),
         postalCode: data.postalCode.replace(/\D/g, ''),
         addressNumber: data.addressNumber,
+        addressComplement: data.addressComplement,
         phone: data.phone.replace(/\D/g, ''),
       },
       dueDate: new Date(),
@@ -291,31 +324,23 @@ export function FormCreditCard({ clientId }: modalProps) {
                   </SeparatorInputs>
 
                   <ContainerSeparatorInputs>
-                    <label htmlFor="postalCode">Rua</label>
-                    <Controller
-                      name="postalCode"
-                      control={control}
-                      render={({ field: { value, ref } }) => (
-                        <input
-                          type="text"
-                          id="postalCode"
-                          onChange={(e) => handleChangeCEP(e)}
-                          value={value}
-                          ref={ref}
-                          minLength={8}
-                          maxLength={8}
-                          placeholder="Informe a rua"
-                          required
-                        />
-                      )}
+                    <label htmlFor="road">Rua</label>
+
+                    <input
+                      type="text"
+                      id="road"
+                      maxLength={30}
+                      placeholder="Informe a rua"
+                      required
+                      {...register('road')}
                     />
                   </ContainerSeparatorInputs>
 
                   <SeparatorInputs>
                     <ContainerSeparatorInputs>
-                      <label htmlFor="addressNumber">Número</label>
+                      <label htmlFor="addressNumber">Número </label>
                       <input
-                        type="number"
+                        type="text"
                         minLength={1}
                         maxLength={6}
                         id="addressNumber"
@@ -325,29 +350,27 @@ export function FormCreditCard({ clientId }: modalProps) {
                       />
                     </ContainerSeparatorInputs>
                     <ContainerSeparatorInputs>
-                      <label htmlFor="addressNumber">Bairro</label>
+                      <label htmlFor="district">Bairro</label>
                       <input
-                        type="number"
-                        minLength={1}
-                        maxLength={6}
-                        id="addressNumber"
+                        type="text"
+                        maxLength={15}
+                        id="district"
                         placeholder="Bairro"
                         required
-                        {...register('addressNumber')}
+                        {...register('district')}
                       />
                     </ContainerSeparatorInputs>
                   </SeparatorInputs>
 
                   <ContainerSeparatorInputs>
-                    <label htmlFor="addressNumber">Complemento</label>
+                    <label htmlFor="addressComplement">Complemento</label>
                     <input
-                      type="number"
-                      minLength={1}
-                      maxLength={6}
-                      id="addressNumber"
+                      type="text"
+                      maxLength={30}
+                      id="addressComplement"
                       placeholder="Complemento"
                       required
-                      {...register('addressNumber')}
+                      {...register('addressComplement')}
                     />
                   </ContainerSeparatorInputs>
                 </BoxContainer>

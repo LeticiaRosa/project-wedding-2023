@@ -7,3 +7,5 @@ const applicationPrefix = 'application'
 export const baseSheetsURL = `${baseSheets}/${idPlan}`
 export const basePagBankURL = `${basePagBank}`
 export const APPICATION_CREATE = `${basePagBank}/${authPrefix}/${applicationPrefix}`
+
+export const baseCEPURL = 'https://viacep.com.br/'

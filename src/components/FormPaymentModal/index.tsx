@@ -26,10 +26,10 @@ import {
   formatPhone,
 } from '../../utils/formatteds'
 import { api } from '../../services/apiAssas'
-import { FormCreditCard } from './components/FormCreditCard'
+import { FormCreditCard } from './components/FormCreditCard/index'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { returnError } from '../../utils/response_api'
+import { returnError } from '../../utils/responseApi'
 import { FormPix, PropsDataPix } from './components/FormPix'
 import { useModel } from '../../contexts/contextModal'
 
