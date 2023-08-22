@@ -96,6 +96,9 @@ export const ContainerSeparatorInputs = styled.div`
     margin: 0.5rem 0;
     padding: 1rem 1rem;
     transition: box-shadow 0.5s ease;
+    &:disabled {
+      background-color: ${(props) => props.theme.lightGrey};
+    }
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
@@ -122,6 +125,18 @@ export const SeparatorInputs = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
+`
+export const SeparatorCEP = styled.div`
+  display: flex;
+  font-size: 0.75rem;
+  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  p {
+    padding-top: 1rem;
+    color: red;
+  }
 `
 
 export const DivPrice = styled.div`

@@ -115,6 +115,7 @@ export function Form() {
         }),
       )
     setSearchTerm('')
+    setSelectedCheckboxes([''])
     reset()
   }
 
@@ -146,6 +147,7 @@ export function Form() {
                 onChange={(e: any) => {
                   field.onChange(e)
                   handleInputChange(e.target.value)
+                  setSelectedCheckboxes([''])
                 }}
                 placeholder="Digite para buscar"
               />

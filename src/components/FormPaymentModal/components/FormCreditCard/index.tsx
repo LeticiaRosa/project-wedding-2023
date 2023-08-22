@@ -16,6 +16,7 @@ import {
   TitleForm,
   BoxContainer,
   ContainerTitleForm,
+  SeparatorCEP,
 } from './styles'
 import { ChangeEvent, useState } from 'react'
 import { X } from 'phosphor-react'
@@ -53,29 +54,31 @@ interface modalProps {
 }
 
 export function FormCreditCard({ clientId }: modalProps) {
+  const [trueCEP, setTrueCEP] = useState(false)
   const { totalPrice, removeAllItemsCart } = useCart()
   const { handleModalPayment, closeAllModals } = useModel()
   const [totalPriceWithParc, setTotalPriceWithParc] = useState(totalPrice / 100)
-  const { register, control, setValue, handleSubmit } = useForm<DataForm>({
-    defaultValues: {
-      quota: '1',
-      name: '',
-      email: '',
-      cpfCnpj: '',
-      phone: '',
-      postalCode: '',
-      road: '',
-      addressNumber: '',
-      district: '',
-      addressComplement: '',
-      holderName: '',
-      numberCreditCard: '',
-      expiryMonth: '01',
-      expiryYear: '2023',
-      ccv: '',
-      priceTotalWithParce: 0,
-    },
-  })
+  const { register, control, setValue, handleSubmit, getValues } =
+    useForm<DataForm>({
+      defaultValues: {
+        quota: '1',
+        name: '',
+        email: '',
+        cpfCnpj: '',
+        phone: '',
+        postalCode: '',
+        road: '',
+        addressNumber: '',
+        district: '',
+        addressComplement: '',
+        holderName: '',
+        numberCreditCard: '',
+        expiryMonth: '01',
+        expiryYear: '2023',
+        ccv: '',
+        priceTotalWithParce: 0,
+      },
+    })
   const quotas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // Exemplo de opções de parcelas
   function calculeValue(option: number) {
     const taxa = totalPrice / 100 + 0.49
@@ -125,16 +128,23 @@ export function FormCreditCard({ clientId }: modalProps) {
     const value = event.target.value
     const formattedValue = formatCEP(value)
     setValue('postalCode', formattedValue)
-
+    setValue('road', '')
+    setValue('district', '')
+    setValue('addressNumber', '')
+    setValue('addressComplement', '')
     if (formattedValue.length > 8) {
       const data = await buscarEndereco(formattedValue)
-      if (data) {
+      if (data.cep) {
+        setTrueCEP(true)
         setValue('road', data.logradouro)
         setValue('district', data.bairro)
       } else {
+        setTrueCEP(false)
         setValue('road', '')
         setValue('district', '')
       }
+    } else {
+      setTrueCEP(false)
     }
   }
   const handleChangeNumberCreditCard = (
@@ -300,7 +310,7 @@ export function FormCreditCard({ clientId }: modalProps) {
                 </ContainerTitleForm>
 
                 <BoxContainer>
-                  <SeparatorInputs>
+                  <SeparatorCEP>
                     <ContainerSeparatorInputs>
                       <label htmlFor="postalCode">CEP do titular</label>
                       <Controller
@@ -317,11 +327,19 @@ export function FormCreditCard({ clientId }: modalProps) {
                             maxLength={8}
                             placeholder="XXXXX-XX"
                             required
+                            style={
+                              !trueCEP && getValues('postalCode').length > 0
+                                ? { boxShadow: '0 0 0 2px red' }
+                                : { backgroundColor: '' }
+                            }
                           />
                         )}
                       />
                     </ContainerSeparatorInputs>
-                  </SeparatorInputs>
+                    {!trueCEP && getValues('postalCode').length > 0 ? (
+                      <p>CEP inválido</p>
+                    ) : null}
+                  </SeparatorCEP>
 
                   <ContainerSeparatorInputs>
                     <label htmlFor="road">Rua</label>
@@ -329,8 +347,9 @@ export function FormCreditCard({ clientId }: modalProps) {
                     <input
                       type="text"
                       id="road"
+                      disabled={!trueCEP}
                       maxLength={30}
-                      placeholder="Informe a rua"
+                      placeholder={!trueCEP ? '' : 'Informe a rua'}
                       required
                       {...register('road')}
                     />
@@ -341,10 +360,11 @@ export function FormCreditCard({ clientId }: modalProps) {
                       <label htmlFor="addressNumber">Número </label>
                       <input
                         type="text"
+                        disabled={!trueCEP}
                         minLength={1}
                         maxLength={6}
                         id="addressNumber"
-                        placeholder="Número"
+                        placeholder={!trueCEP ? '' : 'Número'}
                         required
                         {...register('addressNumber')}
                       />
@@ -353,9 +373,10 @@ export function FormCreditCard({ clientId }: modalProps) {
                       <label htmlFor="district">Bairro</label>
                       <input
                         type="text"
+                        disabled={!trueCEP}
                         maxLength={15}
                         id="district"
-                        placeholder="Bairro"
+                        placeholder={!trueCEP ? '' : 'Bairro'}
                         required
                         {...register('district')}
                       />
@@ -366,9 +387,10 @@ export function FormCreditCard({ clientId }: modalProps) {
                     <label htmlFor="addressComplement">Complemento</label>
                     <input
                       type="text"
+                      disabled={!trueCEP}
                       maxLength={30}
                       id="addressComplement"
-                      placeholder="Complemento"
+                      placeholder={!trueCEP ? '' : 'Complemento'}
                       required
                       {...register('addressComplement')}
                     />
