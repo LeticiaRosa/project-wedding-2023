@@ -25,6 +25,7 @@ import {
   tvLed,
   vaso,
   viagemCancum,
+  volcher,
 } from '../assets/products'
 
 export const productsLists = [
@@ -184,5 +185,23 @@ export const productsLists = [
     name: 'Vaso de Flores',
     price: 76.09 * 100,
     image: vaso,
+  },
+  {
+    id: 27,
+    name: '_Voucher 100 reais',
+    price: 100 * 100,
+    image: volcher,
+  },
+  {
+    id: 28,
+    name: '_Voucher 500 reais',
+    price: 500 * 100,
+    image: volcher,
+  },
+  {
+    id: 29,
+    name: '_Voucher 1000 reais',
+    price: 1000 * 100,
+    image: volcher,
   },
 ]
