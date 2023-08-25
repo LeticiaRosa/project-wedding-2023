@@ -1,0 +1,19 @@
+[[redirects]]
+  from = "/customers/*"
+  to = "https://sandbox.asaas.com/api/v3/customers/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/payments/*"
+  to = "https://sandbox.asaas.com/api/v3/payments/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/addressKeys/*"
+  to = "https://sandbox.asaas.com/api/v3/pix/addressKeys/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
