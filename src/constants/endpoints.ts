@@ -9,3 +9,4 @@ export const basePagBankURL = `${basePagBank}`
 export const APPICATION_CREATE = `${basePagBank}/${authPrefix}/${applicationPrefix}`
 
 export const baseCEPURL = 'https://viacep.com.br/'
+export const baseIpify = 'https://api.ipify.org?format=json'

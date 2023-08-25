@@ -31,6 +31,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { returnError } from '../../../../utils/responseApi'
 import { useModel } from '../../../../contexts/contextModal'
 import { apii } from '../../../../services/apiCep'
+import { apiIpify } from '../../../../services/apiIpify'
 interface DataForm {
   quota: string
   name: string
@@ -185,7 +186,18 @@ export function FormCreditCard({ clientId }: modalProps) {
       .catch((error) => returnError(error))
   }
 
-  function handlePay(data: DataForm) {
+  async function getIP() {
+    try {
+      const response = await apiIpify.get('').then((body) => {
+        return body.data
+      })
+      return response.ip
+    } catch (error: any) {
+      return []
+    }
+  }
+
+  async function handlePay(data: DataForm) {
     const dataFormatted = {
       billingType: 'CREDIT_CARD',
       creditCard: {
@@ -212,7 +224,7 @@ export function FormCreditCard({ clientId }: modalProps) {
       value: parseFloat(totalPriceWithParc.toFixed(2)),
       customer: clientId,
       authorizeOnly: true,
-      remoteIp: '138.121.66.87',
+      remoteIp: await getIP(),
     }
     createPayment(dataFormatted)
   }
