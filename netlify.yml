@@ -1,0 +1,16 @@
+redirects:
+  - from: "/customers/*"
+    to: "https://sandbox.asaas.com/api/v3/customers/:splat"
+    status: 200
+
+  - from: "/payments/*"
+    to: "https://sandbox.asaas.com/api/v3/payments/:splat"
+    status: 200
+
+  - from: "/addressKeys/*"
+    to: "https://sandbox.asaas.com/api/v3/pix/addressKeys/:splat"
+    status: 200
+
+  - from: "/*"
+    to: "/index.html"
+    status: 200
