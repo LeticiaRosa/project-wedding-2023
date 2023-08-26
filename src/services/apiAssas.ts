@@ -1,7 +1,10 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: '',
+  baseURL:
+    import.meta.env.VITE_REACT_APP_NODE_ENV === 'dev'
+      ? 'http://localhost:5050'
+      : '',
   headers: {
     accept: 'application/json',
     'content-type': 'application/json',
