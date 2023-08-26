@@ -40,6 +40,12 @@ export function FormPix(dataPix: any) {
       setIsCopied(true)
     }
   }
+  const dataAtual = new Date().toLocaleDateString('pt-BR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
   return (
     <>
       <ModalOverlay>
@@ -84,7 +90,7 @@ export function FormPix(dataPix: any) {
                 <p>Carregando...</p>
               )}
               <ContainerInfo>
-                Efetue o pagamento até <span>01/08/2023</span>
+                Efetue o pagamento até <span>{dataAtual}</span>
                 <DivPrice>
                   <p>Valor: </p>
                   <h4>

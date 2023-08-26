@@ -49,7 +49,7 @@ export function OptionsPaymentModal() {
                 <Cart />
                 <ContainerTitleButton>
                   <p>Cartão de Crédito</p>
-                  <span>Pagamento em até 6x</span>
+                  <span>Pagamento em até 12x</span>
                 </ContainerTitleButton>
               </OptionsButton>
               <OptionsButton onClick={() => openFormPaymentModal('Boleto')}>

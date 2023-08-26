@@ -26,6 +26,7 @@ import {
   vaso,
   viagemCancum,
   volcher,
+  cooktop,
 } from '../assets/products'
 
 export const productsLists = [
@@ -193,15 +194,27 @@ export const productsLists = [
     image: volcher,
   },
   {
-    id: 28,
+    id: 29,
+    name: '_Voucher 250 reais',
+    price: 250 * 100,
+    image: volcher,
+  },
+  {
+    id: 30,
     name: '_Voucher 500 reais',
     price: 500 * 100,
     image: volcher,
   },
   {
-    id: 29,
+    id: 31,
     name: '_Voucher 1000 reais',
     price: 1000 * 100,
     image: volcher,
+  },
+  {
+    id: 32,
+    name: 'Cooktop Elétrico',
+    price: 1599 * 100,
+    image: cooktop,
   },
 ]

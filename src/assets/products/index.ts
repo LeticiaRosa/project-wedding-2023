@@ -25,6 +25,7 @@ import tvLed from './TV led.jpg'
 import vaso from './vaso.jpg'
 import viagemCancum from './viagem para cancum.jpg'
 import volcher from './volcher.png'
+import cooktop from './cooktop.jpg'
 
 export {
   aparelhoJantar,
@@ -54,4 +55,5 @@ export {
   vaso,
   viagemCancum,
   volcher,
+  cooktop,
 }
