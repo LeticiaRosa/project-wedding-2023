@@ -223,7 +223,7 @@ export function FormCreditCard({ clientId }: modalProps) {
       ),
       value: parseFloat(totalPriceWithParc.toFixed(2)),
       customer: clientId,
-      authorizeOnly: true,
+      // authorizeOnly: true,
       remoteIp: await getIP(),
     }
     createPayment(dataFormatted)
