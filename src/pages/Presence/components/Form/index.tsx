@@ -121,8 +121,9 @@ export function Form() {
         )
     } catch (error) {
       console.error('Erro na chamada à API:', error)
-      // setIsLoading(false) // Certifique-se de desativar o indicador mesmo em caso de erro
+      // setIsLoading(false) //  Certifique-se de desativar o indicador mesmo em caso de erro
     }
+    // setIsLoading(false)
     // setIsLoading(false)
     setSearchTerm('')
     setNameConfirmated([])
