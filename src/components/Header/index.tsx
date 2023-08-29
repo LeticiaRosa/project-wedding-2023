@@ -12,13 +12,13 @@ export function Header() {
           <h1>G e L</h1>
           <nav>
             <NavLink to="/" title="Welcome">
-              Welcome
+              Bem-vindo
             </NavLink>
             <NavLink to="/presence" title="Presence">
               Confirmar presença
             </NavLink>
             <NavLink to="/listPresents" title="ListPresents">
-              Lista de Presentes
+              Lista de presentes
             </NavLink>
             <NavLink to="/events" title="Events">
               Eventos

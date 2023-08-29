@@ -106,7 +106,6 @@ export const PresentButton = styled(BaseButton)`
     background-color: ${(props) => props.theme['terra-700']};
   }
 `
-
 export const SelectContainer = styled.div<{ isVisible: boolean }>`
   display: ${(props) => (props.isVisible ? 'block' : 'none')};
   position: absolute;

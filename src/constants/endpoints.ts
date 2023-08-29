@@ -1,7 +1,7 @@
 export const baseSheets = 'https://sheet.best/api/sheets'
 
 export const basePagBank = 'https://sandbox.api.pagseguro.com'
-const idPlan = '8507c123-02eb-43f0-a757-4233f294e081'
+const idPlan = '6cde65e7-5111-460e-8288-eb3893532612'
 const authPrefix = 'oauth2'
 const applicationPrefix = 'application'
 export const baseSheetsURL = `${baseSheets}/${idPlan}`

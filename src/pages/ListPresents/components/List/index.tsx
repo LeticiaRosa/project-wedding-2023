@@ -1,7 +1,7 @@
 import { ContainerSort, ContainerList, ContainerPagination } from './styles'
 import { productsLists } from '../../../../constants/productsList'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { Loader } from '../Loader'
+import { Loader } from './Loader'
 import { useCart } from '../../../../contexts/contexts'
 
 export function List() {

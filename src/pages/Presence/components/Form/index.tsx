@@ -22,6 +22,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { GestOption, gestsList } from '../../../../constants/guestsList'
 import { format } from 'date-fns'
+// import { Loader } from '../../../../components/Loader/index'
 
 interface DataForm {
   mensage: string
@@ -45,6 +46,7 @@ export function Form() {
   const [searchTerm, setSearchTerm] = useState('')
   const [nameConfirmated, setNameConfirmated] = useState<string[]>([])
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]) // Estado para acompanhar as caixas de seleção selecionadas
+  // const [isLoading, setIsLoading] = useState(false)
 
   const [isVisible, setIsVisible] = useState(false)
 
@@ -86,7 +88,11 @@ export function Form() {
       setSelectedCheckboxes([...selectedCheckboxes, value]) // Marcar se ainda não estiver marcado
     }
   }
+
   async function handleSalveOnSheets(data: DataForm) {
+    // Simulando um atraso de 1 segundo para mostrar o carregamento
+    // setIsLoading(true)
+
     const names = nameConfirmated.map((name) => name || ' - ')
     const dataAtual = new Date()
     const dataAtualFormatada = format(dataAtual, 'dd/MM/yyyy HH:mm:ss')
@@ -99,23 +105,28 @@ export function Form() {
       TEXTO: data.mensage,
       'DATA DA CONFIRMAÇÃO': dataAtualFormatada,
     }
-    console.log(dataFormatted)
-
-    await Api.post('', dataFormatted)
-      .then(() =>
-        toast.success('Presença Confirmada!', {
-          position: toast.POSITION.TOP_CENTER,
-          theme: 'colored',
-        }),
-      )
-      .catch((error) =>
-        toast.error(`Erro ao enviar o post: ${error.message}`, {
-          position: toast.POSITION.TOP_CENTER,
-          theme: 'colored',
-        }),
-      )
+    try {
+      await Api.post('', dataFormatted)
+        .then(() =>
+          toast.success('Presença Confirmada!', {
+            position: toast.POSITION.TOP_CENTER,
+            theme: 'colored',
+          }),
+        )
+        .catch((error) =>
+          toast.error(`Erro ao enviar o post: ${error.message}`, {
+            position: toast.POSITION.TOP_CENTER,
+            theme: 'colored',
+          }),
+        )
+    } catch (error) {
+      console.error('Erro na chamada à API:', error)
+      // setIsLoading(false) // Certifique-se de desativar o indicador mesmo em caso de erro
+    }
+    // setIsLoading(false)
     setSearchTerm('')
-    setSelectedCheckboxes([''])
+    setNameConfirmated([])
+    setSelectedCheckboxes([])
     reset()
   }
 
@@ -144,10 +155,11 @@ export function Form() {
                 {...field}
                 type="text"
                 value={searchTerm}
+                minLength={2}
                 onChange={(e: any) => {
                   field.onChange(e)
                   handleInputChange(e.target.value)
-                  setSelectedCheckboxes([''])
+                  setSelectedCheckboxes([])
                 }}
                 placeholder="Digite para buscar"
               />
@@ -223,7 +235,10 @@ export function Form() {
           ></textarea>
         </ContainerSeparatorInputs>
         <ContainerButton>
-          <PresentButton type="submit">Confirmar presença</PresentButton>
+          <PresentButton type="submit">
+            Confirmar presença
+            {/* {isLoading ? <Loader /> : <> Confirmar presença</>} */}
+          </PresentButton>
         </ContainerButton>
       </ContainerForm>
     </>

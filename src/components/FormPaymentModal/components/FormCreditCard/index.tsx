@@ -115,7 +115,6 @@ export function FormCreditCard({ clientId }: modalProps) {
       const response = await apii.get(`/ws/${cep}/json/`).then((body) => {
         return body.data
       })
-      console.log(response.cep)
       if (response.cep.length > 0) {
         return response
       }
