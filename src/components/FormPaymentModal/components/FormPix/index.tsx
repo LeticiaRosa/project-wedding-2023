@@ -57,7 +57,12 @@ export function FormPix(dataPix: any) {
                 <p>Dados do Pix</p>
               </ContainerTitle>
             </ModalTitle>
-            <CloseButton type="button" onClick={() => handleModalPayment()}>
+            <CloseButton
+              type="button"
+              onClick={() => {
+                handleModalPayment()
+              }}
+            >
               <X size={25} />
             </CloseButton>
           </ModalHeader>

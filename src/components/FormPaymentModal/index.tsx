@@ -205,7 +205,6 @@ export function FormPaymentModal() {
       if (qrcode) {
         setDataPix(qrcode)
         handleModalPayment()
-        removeAllItemsCart()
       }
     }
   }
