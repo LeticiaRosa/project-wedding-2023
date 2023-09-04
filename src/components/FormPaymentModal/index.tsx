@@ -11,7 +11,6 @@ import {
   ContainerSeparatorInputs,
   ModalFooter,
   CancelButton,
-  PaymentButton,
   DivPrice,
 } from './styles'
 import isValidProp from '@emotion/is-prop-valid'
@@ -32,6 +31,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { returnError } from '../../utils/responseApi'
 import { FormPix, PropsDataPix } from './components/FormPix'
 import { useModel } from '../../contexts/contextModal'
+import { Button } from '../Button'
 
 interface DataForm {
   name: string
@@ -41,6 +41,8 @@ interface DataForm {
   quota: string
 }
 export function FormPaymentModal() {
+  const [isLoading, setIsLoading] = useState(false)
+
   const { totalPrice, removeAllItemsCart } = useCart()
   const {
     handleModalPayment,
@@ -210,10 +212,18 @@ export function FormPaymentModal() {
   }
 
   async function handleGo(data: DataForm) {
-    createClient({ name: data.name, cpfCnpj: data.cpf })
-    const idCustomer = await listClient(data.cpf)
-    setClientId(idCustomer)
-    openOptions(idCustomer)
+    try {
+      setIsLoading(true)
+      createClient({ name: data.name, cpfCnpj: data.cpf })
+      const idCustomer = await listClient(data.cpf)
+      setClientId(idCustomer)
+      await openOptions(idCustomer)
+    } catch (error: any) {
+      returnError(error)
+      return null
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -331,7 +341,7 @@ export function FormPaymentModal() {
                   <CancelButton onClick={() => handleModalData()} type="button">
                     Voltar
                   </CancelButton>
-                  <PaymentButton type="submit">Avançar</PaymentButton>
+                  <Button isLoading={isLoading} name="Avançar"></Button>
                 </ModalFooter>
               </form>
             </ModalContentWrapper>

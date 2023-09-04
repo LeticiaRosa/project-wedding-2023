@@ -98,14 +98,7 @@ export const ContainerButton = styled.div`
   align-items: center;
   justify-content: center;
 `
-export const PresentButton = styled(BaseButton)`
-  padding: 1rem;
-  color: ${(props) => props.theme.white};
-  background-color: ${(props) => props.theme['terra-600']};
-  &:not(:disabled):hover {
-    background-color: ${(props) => props.theme['terra-700']};
-  }
-`
+
 export const SelectContainer = styled.div<{ isVisible: boolean }>`
   display: ${(props) => (props.isVisible ? 'block' : 'none')};
   position: absolute;
@@ -139,5 +132,48 @@ export const ListItem = styled.li`
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
+  }
+`
+
+export const PresentButton = styled(BaseButton)`
+  padding: 1rem;
+  color: ${(props) => props.theme.white};
+  background-color: ${(props) => props.theme['terra-600']};
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme['terra-700']};
+  }
+  &:disabled {
+    cursor: default;
+    background-color: ${(props) => props.theme.gray};
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  height: 60px;
+`
+
+export const Loader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .loader {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `

@@ -10,7 +10,6 @@ import {
   ContainerSeparatorInputs,
   ModalFooter,
   CancelButton,
-  PaymentButton,
   DivPrice,
   SeparatorInputs,
   TitleForm,
@@ -32,6 +31,7 @@ import { returnError } from '../../../../utils/responseApi'
 import { useModel } from '../../../../contexts/contextModal'
 import { apii } from '../../../../services/apiCep'
 import { apiIpify } from '../../../../services/apiIpify'
+import { Button } from '../../../Button'
 interface DataForm {
   quota: string
   name: string
@@ -56,10 +56,11 @@ interface modalProps {
 
 export function FormCreditCard({ clientId }: modalProps) {
   const [trueCEP, setTrueCEP] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { totalPrice, removeAllItemsCart } = useCart()
   const { handleModalPayment, closeAllModals } = useModel()
   const [totalPriceWithParc, setTotalPriceWithParc] = useState(totalPrice / 100)
-  const { register, control, setValue, handleSubmit, getValues } =
+  const { register, control, setValue, handleSubmit, getValues, reset } =
     useForm<DataForm>({
       defaultValues: {
         quota: '1',
@@ -81,6 +82,19 @@ export function FormCreditCard({ clientId }: modalProps) {
       },
     })
   const quotas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // Exemplo de opções de parcelas
+  const months = []
+  for (let i = 0; i <= 11; i++) {
+    const month = (i + 1).toString().padStart(2, '0')
+    months.push(month)
+  }
+
+  const anoAtual = new Date().getFullYear()
+  const quantidadeAnos = 10
+  const year = [anoAtual]
+
+  for (let i = 1; i <= quantidadeAnos; i++) {
+    year.push(anoAtual + i)
+  }
   function calculeValue(option: number) {
     const taxa = totalPrice / 100 + 0.49
     if (option >= 2 && option <= 6) {
@@ -155,20 +169,6 @@ export function FormCreditCard({ clientId }: modalProps) {
     setValue('numberCreditCard', formattedValue)
   }
 
-  const months = []
-  for (let i = 0; i <= 11; i++) {
-    const month = (i + 1).toString().padStart(2, '0')
-    months.push(month)
-  }
-
-  const anoAtual = new Date().getFullYear()
-  const quantidadeAnos = 10
-  const year = [anoAtual]
-
-  for (let i = 1; i <= quantidadeAnos; i++) {
-    year.push(anoAtual + i)
-  }
-
   async function createPayment(data: any) {
     await api
       .post('/payments', data)
@@ -197,35 +197,44 @@ export function FormCreditCard({ clientId }: modalProps) {
   }
 
   async function handlePay(data: DataForm) {
-    const dataFormatted = {
-      billingType: 'CREDIT_CARD',
-      creditCard: {
-        holderName: data.holderName,
-        number: data.numberCreditCard,
-        expiryMonth: data.expiryMonth,
-        expiryYear: data.expiryYear,
-        ccv: data.ccv,
-      },
-      creditCardHolderInfo: {
-        name: data.name,
-        email: data.email,
-        cpfCnpj: data.cpfCnpj.replace(/[.-]/g, ''),
-        postalCode: data.postalCode.replace(/\D/g, ''),
-        addressNumber: data.addressNumber,
-        addressComplement: data.addressComplement,
-        phone: data.phone.replace(/\D/g, ''),
-      },
-      dueDate: new Date(),
-      installmentCount: Number(data.quota),
-      installmentValue: parseFloat(
-        (totalPriceWithParc / Number(data.quota)).toFixed(2),
-      ),
-      value: parseFloat(totalPriceWithParc.toFixed(2)),
-      customer: clientId,
-      // authorizeOnly: true,
-      remoteIp: await getIP(),
+    setIsLoading(true)
+    try {
+      const dataFormatted = {
+        billingType: 'CREDIT_CARD',
+        creditCard: {
+          holderName: data.holderName,
+          number: data.numberCreditCard,
+          expiryMonth: data.expiryMonth,
+          expiryYear: data.expiryYear,
+          ccv: data.ccv,
+        },
+        creditCardHolderInfo: {
+          name: data.name,
+          email: data.email,
+          cpfCnpj: data.cpfCnpj.replace(/[.-]/g, ''),
+          postalCode: data.postalCode.replace(/\D/g, ''),
+          addressNumber: data.addressNumber,
+          addressComplement: data.addressComplement,
+          phone: data.phone.replace(/\D/g, ''),
+        },
+        dueDate: new Date(),
+        installmentCount: Number(data.quota),
+        installmentValue: parseFloat(
+          (totalPriceWithParc / Number(data.quota)).toFixed(2),
+        ),
+        value: parseFloat(totalPriceWithParc.toFixed(2)),
+        customer: clientId,
+        // authorizeOnly: true,
+        remoteIp: await getIP(),
+      }
+      createPayment(dataFormatted)
+    } catch (error: any) {
+      returnError(error)
+      return null
+    } finally {
+      setIsLoading(false)
+      reset()
     }
-    createPayment(dataFormatted)
   }
 
   return (
@@ -498,7 +507,6 @@ export function FormCreditCard({ clientId }: modalProps) {
                     render={({ field: { value, ref } }) => (
                       <select
                         id="quota"
-                        {...register('quota')}
                         value={value}
                         required
                         ref={ref}
@@ -547,7 +555,11 @@ export function FormCreditCard({ clientId }: modalProps) {
               <CancelButton type="button" onClick={() => handleModalPayment()}>
                 Voltar
               </CancelButton>
-              <PaymentButton type="submit">Realizar o pagamento</PaymentButton>
+
+              <Button
+                isLoading={isLoading}
+                name="Realizar o pagamento"
+              ></Button>
             </ModalFooter>
           </form>
         </ModalContentWrapper>
