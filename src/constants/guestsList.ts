@@ -431,4 +431,14 @@ export const gestsList: GestOption[] = [
     name: 'Helen Carol',
     gests: 2,
   },
+  {
+    id: 86,
+    name: 'Jamari',
+    gests: 3,
+  },
+  {
+    id: 87,
+    name: 'Vilma',
+    gests: 3,
+  },
 ]
