@@ -32,6 +32,8 @@ import { returnError } from '../../utils/responseApi'
 import { FormPix, PropsDataPix } from './components/FormPix'
 import { useModel } from '../../contexts/contextModal'
 import { Button } from '../Button'
+import { apiMock } from '../../services/apiMock'
+import { useProducts } from '../../contexts/contextProducts'
 
 interface DataForm {
   name: string
@@ -42,8 +44,8 @@ interface DataForm {
 }
 export function FormPaymentModal() {
   const [isLoading, setIsLoading] = useState(false)
-
-  const { totalPrice, removeAllItemsCart } = useCart()
+  const { updatedProducts } = useProducts()
+  const { totalPrice, removeAllItemsCart, state } = useCart()
   const {
     handleModalPayment,
     handleModalData,
@@ -211,6 +213,22 @@ export function FormPaymentModal() {
     }
   }
 
+  async function removeItensOfList() {
+    try {
+      state.map(async (item) => {
+        const currentQuantity = (await apiMock.get(`/products/${item.id}`)).data
+          .qtd
+        const updatedData = { qtd: currentQuantity - 1 }
+        const response = await apiMock.put(`/products/${item.id}`, updatedData)
+        updatedProducts()
+        return response
+      })
+    } catch (error: any) {
+      returnError(error)
+      return null
+    }
+  }
+
   async function handleGo(data: DataForm) {
     try {
       setIsLoading(true)
@@ -218,6 +236,7 @@ export function FormPaymentModal() {
       const idCustomer = await listClient(data.cpf)
       setClientId(idCustomer)
       await openOptions(idCustomer)
+      await removeItensOfList()
     } catch (error: any) {
       returnError(error)
       return null

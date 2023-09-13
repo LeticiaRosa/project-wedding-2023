@@ -1,3 +1,4 @@
+import { ProductsContextType } from '../../contexts/contextProducts'
 import { CartContextType } from '../../contexts/contexts'
 import { ActionTypes } from './actions'
 
@@ -20,6 +21,15 @@ export function cartReducer(state: CartContextType[], action: any) {
     case ActionTypes.REMOVE_ALL_ITENS:
       return []
 
+    default:
+      return state
+  }
+}
+
+export function productsReducer(state: ProductsContextType[], action: any) {
+  switch (action.type) {
+    case ActionTypes.UPDATED_PRODUCTS:
+      return []
     default:
       return state
   }

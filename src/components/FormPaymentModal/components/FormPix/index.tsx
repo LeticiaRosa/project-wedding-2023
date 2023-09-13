@@ -33,6 +33,7 @@ export function FormPix(dataPix: any) {
   const [isCopied, setIsCopied] = useState(false)
   const { handleModalPayment } = useModel()
   const { totalPrice } = useCart()
+
   const handleCopyClick = () => {
     if (inputRef.current) {
       inputRef.current.select()

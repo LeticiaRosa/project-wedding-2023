@@ -6,7 +6,6 @@ interface PropsButton {
 }
 
 export function Button({ name, isLoading }: PropsButton) {
-  console.log(isLoading)
   return (
     <StyleButton disabled={isLoading} type="submit">
       {isLoading ? (

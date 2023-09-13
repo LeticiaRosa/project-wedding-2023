@@ -1,16 +1,25 @@
 import { ContainerSort, ContainerList, ContainerPagination } from './styles'
-import { productsLists } from '../../../../constants/productsList'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { Loader } from './Loader'
 import { useCart } from '../../../../contexts/contexts'
+import { useProducts } from '../../../../contexts/contextProducts'
 
+interface Product {
+  id: number
+  name: string
+  price: number
+  qtd: number
+  url: string
+}
 export function List() {
   const { newItemCart } = useCart()
+  const { updatedProducts } = useProducts()
   const [currentPage, setCurrentPage] = useState(1)
   const [sortOption, setSortOption] = useState<
     'nameAsc' | 'nameDesc' | 'priceAsc' | 'priceDesc'
   >('nameAsc')
   const [isLoading, setIsLoading] = useState(false)
+  const [products, setProducts] = useState<Product[]>([]) // State para armazenar os produtos da API
 
   const getInitialProductsPerPage = () => {
     const screenWidth = window.innerWidth
@@ -42,16 +51,22 @@ export function List() {
   }, [])
 
   useEffect(() => {
-    // Simulando um atraso de 1 segundo para mostrar o carregamento
     setIsLoading(true)
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
 
-    return () => clearTimeout(timer)
-  }, [currentPage, sortOption])
+    fetch('https://64ffc94f18c34dee0cd3f38a.mockapi.io/api/v1/products')
+      .then((response) => response.json())
+      .then((data) => {
+        const filteredProducts = data.filter((item: Product) => item.qtd > 0)
+        setProducts(filteredProducts)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar dados da API:', error)
+        setIsLoading(false)
+      })
+  }, [currentPage, sortOption, updatedProducts])
 
-  const totalPages = Math.ceil(productsLists.length / productsPerPage)
+  const totalPages = Math.ceil(products.length / productsPerPage)
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -62,7 +77,7 @@ export function List() {
     )
   }
 
-  const sortedProducts = [...productsLists].sort((a, b) => {
+  const sortedProducts = [...products].sort((a, b) => {
     if (sortOption === 'nameAsc') {
       return a.name.localeCompare(b.name)
     } else if (sortOption === 'nameDesc') {
@@ -102,20 +117,26 @@ export function List() {
           {paginatedProducts.map((item) => {
             return (
               <div className="item" key={item.id}>
-                <img src={item.image} alt={item.name} />
+                <img src={item.url} alt={item.name} />
+
                 <h4>{item.name}</h4>
+                <span>
+                  {item.qtd}
+                  {item.qtd > 1 ? ' disponíveis' : ' disponível'}
+                </span>
                 <p>
                   {(item.price / 100).toLocaleString('pt-br', {
                     style: 'currency',
                     currency: 'BRL',
                   })}
                 </p>
+
                 <button
                   className="presentear-btn"
                   onClick={() =>
                     newItemCart({
                       id: item.id,
-                      image: item.image,
+                      image: item.url,
                       name: item.name,
                       price: item.price,
                     })

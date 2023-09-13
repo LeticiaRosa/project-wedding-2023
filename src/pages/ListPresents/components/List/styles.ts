@@ -61,6 +61,11 @@ export const ContainerList = styled.div`
     font-size: 1rem;
   }
 
+  span {
+    font-size: 0.75rem;
+    display: block;
+  }
+
   .presentear-btn {
     padding: 8px 16px;
     background-color: ${(props) => props.theme['terra-600']};
@@ -71,6 +76,7 @@ export const ContainerList = styled.div`
     color: white;
     font-weight: 500;
   }
+
   @media (max-width: 800px) {
     grid-template-columns: repeat(3, 1fr);
   }

@@ -10,3 +10,4 @@ export const APPICATION_CREATE = `${basePagBank}/${authPrefix}/${applicationPref
 
 export const baseCEPURL = 'https://viacep.com.br/'
 export const baseIpify = 'https://api.ipify.org?format=json'
+export const baseMock = 'https://64ffc94f18c34dee0cd3f38a.mockapi.io/api/v1'
