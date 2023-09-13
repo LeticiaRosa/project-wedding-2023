@@ -115,4 +115,12 @@ export const ContainerPagination = styled.div`
       border-bottom: 3px solid ${(props) => props.theme.black};
     }
   }
+  @media (max-width: 500px) {
+    button {
+      padding: 0.38rem;
+      color: ${(props) => props.theme.black};
+      margin: 0.17rem;
+      font-size: 12px;
+    }
+  }
 `
