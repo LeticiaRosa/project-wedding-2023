@@ -10,18 +10,21 @@ export const ContainerSort = styled.div`
     white-space: nowrap;
   }
   select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 250px;
+    height: 40px;
+    border: 1px solid #ddd;
     padding: 0.5rem;
     color: ${(props) => props.theme.black};
+    background-color: transparent;
     margin: 0.5rem;
     border-radius: 8px;
     font-size: 1rem;
     border: 1px solid ${(props) => props.theme.gray};
     gap: 0.5rem;
     cursor: pointer;
-    -webkit-border-radius: 6px;
-    -moz-appearance: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
   }
   @media (max-width: 500px) {
     display: flex;
