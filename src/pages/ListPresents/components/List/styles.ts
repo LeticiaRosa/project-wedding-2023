@@ -26,6 +26,18 @@ export const ContainerSort = styled.div`
     gap: 0.5rem;
     cursor: pointer;
   }
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    align-content: center;
+    padding: 1rem;
+    .arrow {
+      transform: rotate(180deg);
+      position: absolute;
+    }
+  }
+
   @media (max-width: 500px) {
     display: flex;
     align-items: center;

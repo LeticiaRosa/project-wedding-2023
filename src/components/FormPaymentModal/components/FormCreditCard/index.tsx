@@ -18,7 +18,7 @@ import {
   SeparatorCEP,
 } from './styles'
 import { ChangeEvent, useState } from 'react'
-import { X } from 'phosphor-react'
+import { CaretDoubleUp, X } from 'phosphor-react'
 import {
   formatCEP,
   formatCPF,
@@ -458,33 +458,41 @@ export function FormCreditCard({ clientId }: modalProps) {
                 <SeparatorInputs>
                   <ContainerSeparatorInputs>
                     <label htmlFor="expiryMonth">Mês de expiração</label>
-
-                    <select
-                      id="expiryMonth"
-                      required
-                      {...register('expiryMonth')}
-                    >
-                      {months.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                    </select>
+                    <div>
+                      <select
+                        id="expiryMonth"
+                        required
+                        {...register('expiryMonth')}
+                      >
+                        {months.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="arrow">
+                        <CaretDoubleUp />
+                      </div>
+                    </div>
                   </ContainerSeparatorInputs>
                   <ContainerSeparatorInputs>
                     <label htmlFor="expiryYear">Ano de expiração</label>
-
-                    <select
-                      id="expiryYear"
-                      required
-                      {...register('expiryYear')}
-                    >
-                      {year.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                    </select>
+                    <div>
+                      <select
+                        id="expiryYear"
+                        required
+                        {...register('expiryYear')}
+                      >
+                        {year.map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="arrow">
+                        <CaretDoubleUp />
+                      </div>
+                    </div>
                   </ContainerSeparatorInputs>
                   <ContainerSeparatorInputs>
                     <label htmlFor="ccv">Código de segurança</label>
@@ -501,35 +509,40 @@ export function FormCreditCard({ clientId }: modalProps) {
                 </SeparatorInputs>
                 <ContainerSeparatorInputs>
                   <label htmlFor="quota">Modo de Parcelamento</label>
-                  <Controller
-                    name="quota"
-                    control={control}
-                    render={({ field: { value, ref } }) => (
-                      <select
-                        id="quota"
-                        value={value}
-                        required
-                        ref={ref}
-                        onChange={(e) => handleChangeQuota(e)}
-                      >
-                        {quotas.map((option) => (
-                          <option key={option} value={option}>
-                            {`${option} parcela${
-                              option > 1 ? `s` : ``
-                            } de ${calculeValue(option).toLocaleString(
-                              'pt-br',
-                              {
-                                style: 'currency',
-                                currency: 'BRL',
-                              },
-                            )}
+                  <div>
+                    <Controller
+                      name="quota"
+                      control={control}
+                      render={({ field: { value, ref } }) => (
+                        <select
+                          id="quota"
+                          value={value}
+                          required
+                          ref={ref}
+                          onChange={(e) => handleChangeQuota(e)}
+                        >
+                          {quotas.map((option) => (
+                            <option key={option} value={option}>
+                              {`${option} parcela${
+                                option > 1 ? `s` : ``
+                              } de ${calculeValue(option).toLocaleString(
+                                'pt-br',
+                                {
+                                  style: 'currency',
+                                  currency: 'BRL',
+                                },
+                              )}
                      ${option === 1 ? `sem` : `com`} juros
                       `}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  />
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    />
+                    <div className="arrow">
+                      <CaretDoubleUp />
+                    </div>
+                  </div>
                 </ContainerSeparatorInputs>
               </BoxContainer>
             </ModalBody>

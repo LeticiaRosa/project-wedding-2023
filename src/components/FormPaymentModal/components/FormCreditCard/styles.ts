@@ -105,6 +105,9 @@ export const ContainerSeparatorInputs = styled.div`
   }
 
   select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     width: 100%;
     border-radius: 6px;
     border: 1px solid ${(props) => props.theme.gray};
@@ -117,11 +120,17 @@ export const ContainerSeparatorInputs = styled.div`
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
-    /* Prefixos para o Safari */
-    -webkit-border-radius: 6px;
-    -moz-appearance: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
+  }
+  div {
+    display: flex;
+    align-items: center;
+
+    .arrow {
+      transform: rotate(180deg);
+      position: relative;
+      right: 20px;
+      width: 11px;
+    }
   }
 `
 

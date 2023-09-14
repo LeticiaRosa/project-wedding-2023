@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { Loader } from './Loader'
 import { useCart } from '../../../../contexts/contexts'
 import { useProducts } from '../../../../contexts/contextProducts'
+import { CaretDoubleUp } from 'phosphor-react'
 
 interface Product {
   id: number
@@ -98,16 +99,21 @@ export function List() {
     <>
       <ContainerSort>
         <label htmlFor="sortOption">Ordenar por:</label>
-        <select
-          id="sortOption"
-          value={sortOption}
-          onChange={handleSortOptionChange}
-        >
-          <option value="nameAsc">Nome (A a Z)</option>
-          <option value="nameDesc">Nome (Z a A)</option>
-          <option value="priceAsc">Preço (Menor para Maior)</option>
-          <option value="priceDesc">Preço (Maior para Menor)</option>
-        </select>
+        <div>
+          <select
+            id="sortOption"
+            value={sortOption}
+            onChange={handleSortOptionChange}
+          >
+            <option value="nameAsc">Nome (A a Z)</option>
+            <option value="nameDesc">Nome (Z a A)</option>
+            <option value="priceAsc">Preço (Menor para Maior)</option>
+            <option value="priceDesc">Preço (Maior para Menor)</option>
+          </select>
+          <div className="arrow">
+            <CaretDoubleUp />
+          </div>
+        </div>
       </ContainerSort>
 
       {isLoading ? (
