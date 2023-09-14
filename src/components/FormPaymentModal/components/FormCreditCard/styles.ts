@@ -108,6 +108,8 @@ export const ContainerSeparatorInputs = styled.div`
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    background-color: transparent;
+    color: ${(props) => props.theme.black};
     width: 100%;
     border-radius: 6px;
     border: 1px solid ${(props) => props.theme.gray};
