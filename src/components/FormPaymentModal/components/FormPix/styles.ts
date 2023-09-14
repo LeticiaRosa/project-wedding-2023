@@ -57,6 +57,7 @@ export const CloseButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  color: ${(props) => props.theme.black};
 `
 export const ModalBody = styled.div`
   padding: 1rem 0;
