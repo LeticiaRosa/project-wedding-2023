@@ -117,6 +117,11 @@ export const ContainerSeparatorInputs = styled.div`
     &:not(:disabled):hover {
       box-shadow: 0 0 0 2px ${(props) => props.theme['terra-500']};
     }
+    /* Prefixos para o Safari */
+    -webkit-border-radius: 6px;
+    -moz-appearance: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
   }
 `
 

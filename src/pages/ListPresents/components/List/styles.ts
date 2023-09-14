@@ -18,6 +18,10 @@ export const ContainerSort = styled.div`
     border: 1px solid ${(props) => props.theme.gray};
     gap: 0.5rem;
     cursor: pointer;
+    -webkit-border-radius: 6px;
+    -moz-appearance: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
   }
   @media (max-width: 500px) {
     display: flex;
