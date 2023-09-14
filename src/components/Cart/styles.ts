@@ -198,6 +198,7 @@ export const ContainerButtons = styled.div`
 `
 
 export const BaseButton = styled.button`
+  color: ${(props) => props.theme.black};
   padding: 0.5rem 1rem;
   margin: 0.3rem;
   border-radius: 8px;

@@ -33,10 +33,13 @@ export const ContainerList = styled.div`
   grid-gap: 10px;
   max-width: 900px;
   min-height: 300px;
+
   padding-bottom: 2rem;
+
   .item {
     text-align: center;
-    max-width: 200px;
+    max-width: 900px;
+    min-width: 150px;
     background-color: ${(props) => props.theme['terra-100']};
   }
 

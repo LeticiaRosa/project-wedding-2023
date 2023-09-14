@@ -32,6 +32,7 @@ export const ModalTitle = styled.p`
   margin: 0;
   font-size: 1.5rem;
   font-weight: 400;
+  color: ${(props) => props.theme.black};
 `
 
 export const CloseButton = styled.button`
@@ -77,6 +78,7 @@ export const OptionsButton = styled.button`
 `
 
 export const ContainerTitleButton = styled.div`
+  color: ${(props) => props.theme.black};
   display: flex;
   align-items: start;
   text-align: start;
