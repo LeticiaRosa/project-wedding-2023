@@ -1,9 +1,10 @@
-import { ContainerSort, ContainerList, ContainerPagination } from './styles'
+import { ContainerSort, ContainerList } from './styles'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { Loader } from './Loader'
 import { useCart } from '../../../../contexts/contexts'
 import { useProducts } from '../../../../contexts/contextProducts'
 import { CaretDoubleUp } from 'phosphor-react'
+import { Pagination } from './Pagination'
 
 interface Product {
   id: number
@@ -156,19 +157,11 @@ export function List() {
         </ContainerList>
       )}
 
-      <ContainerPagination>
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-          (page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              disabled={page === currentPage}
-            >
-              {page}
-            </button>
-          ),
-        )}
-      </ContainerPagination>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        handlePageChange={handlePageChange}
+      />
     </>
   )
 }

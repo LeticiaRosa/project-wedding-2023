@@ -403,7 +403,7 @@ export const gestsList: GestOption[] = [
   },
   {
     id: 80,
-    name: 'Gabriel Ballas e Andressa',
+    name: 'Gabriel Ballas',
     gests: 2,
   },
   {

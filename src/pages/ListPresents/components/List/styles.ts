@@ -133,16 +133,15 @@ export const ContainerPagination = styled.div`
       background-color: ${(props) => props.theme.gray};
     }
     &:disabled {
-      border-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
       border-bottom: 3px solid ${(props) => props.theme.black};
     }
   }
   @media (max-width: 500px) {
     button {
-      padding: 0.38rem;
-      color: ${(props) => props.theme.black};
-      margin: 0.17rem;
-      font-size: 12px;
+      margin: 0.25rem;
+      font-size: 0.75rem;
     }
   }
 `
