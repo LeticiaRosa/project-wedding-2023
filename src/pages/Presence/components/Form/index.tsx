@@ -96,33 +96,45 @@ export function Form() {
 
     const names = nameConfirmated.map((name) => name || ' - ')
     const dataAtual = new Date()
-    const dataFormatted = {
-      'NOME FAMILIA': data.optionSelect.name,
-      'QUANTIDADE DE CONVIDADOS': data.optionSelect.gests,
-      'QUANTIDADE DE CONFIRMADOS': nameConfirmated.length,
-      'NOME DOS CONFIRMADOS': names,
-      'QUANTIDADE DE MENORES DE IDADE': selectedCheckboxes.length,
-      TEXTO: data.mensage,
-      'DATA DA CONFIRMAÇÃO': format(dataAtual, 'dd/MM/yyyy HH:mm:ss'),
-    }
-    try {
-      await Api.post('', dataFormatted)
-        .then(() =>
-          toast.success('Presença Confirmada!', {
-            position: toast.POSITION.TOP_CENTER,
-            theme: 'colored',
-          }),
-        )
-        .catch((error) =>
-          toast.error(`Erro ao confirmar a presença: ${error.message}`, {
-            position: toast.POSITION.TOP_CENTER,
-            theme: 'colored',
-          }),
-        )
-    } catch (error: any) {
-      returnError(error)
-      return null
-    } finally {
+    if (data.optionSelect.name) {
+      const dataFormatted = {
+        'NOME FAMILIA': data.optionSelect.name,
+        'QUANTIDADE DE CONVIDADOS': data.optionSelect.gests,
+        'QUANTIDADE DE CONFIRMADOS': nameConfirmated.length,
+        'NOME DOS CONFIRMADOS': names,
+        'QUANTIDADE DE MENORES DE IDADE': selectedCheckboxes.length,
+        TEXTO: data.mensage,
+        'DATA DA CONFIRMAÇÃO': format(dataAtual, 'dd/MM/yyyy HH:mm:ss'),
+      }
+      try {
+        await Api.post('', dataFormatted)
+          .then(() =>
+            toast.success('Presença Confirmada!', {
+              position: toast.POSITION.TOP_CENTER,
+              theme: 'colored',
+            }),
+          )
+          .catch((error) =>
+            toast.error(`Erro ao confirmar a presença: ${error.message}`, {
+              position: toast.POSITION.TOP_CENTER,
+              theme: 'colored',
+            }),
+          )
+      } catch (error: any) {
+        returnError(error)
+        return null
+      } finally {
+        setIsLoading(false)
+        setSearchTerm('')
+        setNameConfirmated([])
+        setSelectedCheckboxes([])
+        reset()
+      }
+    } else {
+      toast.error('Preencha corretamente os campos!', {
+        position: toast.POSITION.TOP_CENTER,
+        theme: 'colored',
+      })
       setIsLoading(false)
       setSearchTerm('')
       setNameConfirmated([])
@@ -191,13 +203,15 @@ export function Form() {
                 <div>
                   <legend>
                     Gentileza preencher os campos abaixo apenas com o nome dos
-                    confirmados:
+                    <b> confirmados</b>:
+                    <h5>Atenção: Informe o seu nome também!</h5>
                   </legend>
 
                   {Array.from({ length: getValues('optionSelect').gests }).map(
                     (_, index) => (
                       <ContainerRadio key={index}>
                         <input
+                          required={index === 0}
                           type="text"
                           name={`nameConfirmated[${index}]`}
                           onChange={(e) => {
