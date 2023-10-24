@@ -38,7 +38,7 @@ export const gestsList: GestOption[] = [
   {
     id: 7,
     name: 'Thaís Lima',
-    gests: 3,
+    gests: 4,
   },
   {
     id: 8,
@@ -176,14 +176,9 @@ export const gestsList: GestOption[] = [
     gests: 4,
   },
   {
-    id: 36,
-    name: 'Geraldo',
-    gests: 2,
-  },
-  {
     id: 37,
     name: 'Raimunda',
-    gests: 2,
+    gests: 3,
   },
   {
     id: 38,
@@ -213,17 +208,7 @@ export const gestsList: GestOption[] = [
   {
     id: 43,
     name: 'Dilaine Guedes',
-    gests: 2,
-  },
-  {
-    id: 44,
-    name: 'Wanderson Guedes',
-    gests: 2,
-  },
-  {
-    id: 45,
-    name: 'Caroline Guedes',
-    gests: 2,
+    gests: 3,
   },
   {
     id: 46,
@@ -273,12 +258,12 @@ export const gestsList: GestOption[] = [
   {
     id: 56,
     name: 'Lucimar Araújo',
-    gests: 2,
+    gests: 4,
   },
   {
     id: 59,
     name: 'Wirley Viana',
-    gests: 4,
+    gests: 5,
   },
   {
     id: 60,
