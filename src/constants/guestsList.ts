@@ -12,8 +12,8 @@ export const gestsList: GestOption[] = [
   },
   {
     id: 2,
-    name: 'Breno Cavassana',
-    gests: 4,
+    name: 'Magali',
+    gests: 2,
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ export const gestsList: GestOption[] = [
   {
     id: 7,
     name: 'Thaís Lima',
-    gests: 5,
+    gests: 3,
   },
   {
     id: 8,
@@ -60,7 +60,6 @@ export const gestsList: GestOption[] = [
     name: 'Carol Lima',
     gests: 1,
   },
-
   {
     id: 12,
     name: 'Luiz Carlos ',
@@ -167,11 +166,6 @@ export const gestsList: GestOption[] = [
     gests: 5,
   },
   {
-    id: 33,
-    name: 'Maria das Graças',
-    gests: 3,
-  },
-  {
     id: 34,
     name: 'Esmeralda Ferreira e Brasilino',
     gests: 3,
@@ -252,11 +246,6 @@ export const gestsList: GestOption[] = [
     gests: 3,
   },
   {
-    id: 50,
-    name: 'Pablo Costa',
-    gests: 1,
-  },
-  {
     id: 51,
     name: 'Ilma Araújo',
     gests: 2,
@@ -287,19 +276,9 @@ export const gestsList: GestOption[] = [
     gests: 2,
   },
   {
-    id: 57,
-    name: 'Clara e Jack',
-    gests: 2,
-  },
-  {
-    id: 58,
-    name: 'Fabio Henrique',
-    gests: 1,
-  },
-  {
     id: 59,
     name: 'Wirley Viana',
-    gests: 3,
+    gests: 4,
   },
   {
     id: 60,
@@ -362,11 +341,6 @@ export const gestsList: GestOption[] = [
     gests: 2,
   },
   {
-    id: 72,
-    name: 'Rubens Marques',
-    gests: 2,
-  },
-  {
     id: 73,
     name: 'Roberto Batista Borges',
     gests: 2,
@@ -387,18 +361,8 @@ export const gestsList: GestOption[] = [
     gests: 2,
   },
   {
-    id: 77,
-    name: 'Suely Batista',
-    gests: 2,
-  },
-  {
     id: 78,
     name: 'Wanda Batista',
-    gests: 2,
-  },
-  {
-    id: 79,
-    name: 'Renato Borges',
     gests: 2,
   },
   {
@@ -417,11 +381,6 @@ export const gestsList: GestOption[] = [
     gests: 2,
   },
   {
-    id: 83,
-    name: 'Dilemar',
-    gests: 4,
-  },
-  {
     id: 84,
     name: 'Jonas Nunes ',
     gests: 2,
@@ -434,11 +393,6 @@ export const gestsList: GestOption[] = [
   {
     id: 86,
     name: 'Jamari',
-    gests: 3,
-  },
-  {
-    id: 87,
-    name: 'Vilma',
     gests: 3,
   },
 ]
