@@ -6,6 +6,5 @@ export const Api = axios.create({
   headers: {
     accept: 'application/json',
     'content-type': 'application/json',
-    access_token: import.meta.env.VITE_REACT_APP_API_SHEETS_TOKEN_PATH,
   },
 })

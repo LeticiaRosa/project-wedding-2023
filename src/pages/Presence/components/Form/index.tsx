@@ -107,19 +107,23 @@ export function Form() {
         'DATA DA CONFIRMAÇÃO': format(dataAtual, 'dd/MM/yyyy HH:mm:ss'),
       }
       try {
-        await Api.post('', dataFormatted)
+        Api.post('', dataFormatted)
           .then(() =>
             toast.success('Presença Confirmada!', {
               position: toast.POSITION.TOP_CENTER,
               theme: 'colored',
             }),
           )
-          .catch((error) =>
-            toast.error(`Erro ao confirmar a presença: ${error.message}`, {
-              position: toast.POSITION.TOP_CENTER,
-              theme: 'colored',
-            }),
-          )
+          .catch((error) => {
+            console.log(error)
+            return toast.error(
+              `Erro ao confirmar a presença: ${error.message}`,
+              {
+                position: toast.POSITION.TOP_CENTER,
+                theme: 'colored',
+              },
+            )
+          })
       } catch (error: any) {
         returnError(error)
         return null
